@@ -1,0 +1,69 @@
+YANG Paper Reader: standalone public edition
+Third-party notices and source availability
+
+Third-party components keep their own licenses. The application's LICENSE
+does not reduce their rights. Original notices are included in the installed
+program's licenses/ directory and its Electron notice files. Paths below
+refer to that installed program, not to the public documentation checkout.
+
+Bundled components
+
+- Electron 44.4.5 / Chromium 152.0.7977.130: original Electron MIT license
+  and Chromium/project notices at licenses/electron/.
+- FFmpeg: the separate ffmpeg.dll is covered by the included LGPL-2.1-or-later
+  notice and applicable per-file terms at licenses/ffmpeg/. Corresponding
+  source access is described in SOURCE_AVAILABILITY.md. The application
+  license preserves library replacement/modification and debugging rights.
+- PDF.js 6.4.299: Apache-2.0 at licenses/pdfjs-dist/LICENSE. Its fonts, CMaps,
+  ICC and WebAssembly assets have separate included notices, including
+  Adobe, PDFium/Foxit, Liberation's font exception, OpenJPEG, qcms, QuickJS,
+  Mozilla wrapper and Brotli notices. These assets are not all Apache-only.
+- KaTeX 0.19.0: MIT at licenses/katex/LICENSE. The original notice is also
+  included with its CSS/fonts in exported HTML Overviews.
+- @napi-rs/canvas 1.0.11 and its Windows native package: MIT wrapper notice,
+  original native SBOM, Rust crate notices and native dependency notices at
+  licenses/canvas/. Multiple/per-file terms remain applicable, including
+  FreeType, HarfBuzz, Skia, ICU, Expat, Brotli, libjxl, Highway, libjpeg-turbo,
+  libpng, libwebp, Wuffs, zlib, libaom and libavif.
+  This product uses the FreeType Project's font engine under the FreeType
+  License. See licenses/canvas/native/freetype/docs/FTL.TXT.
+  This software is based in part on the work of the Independent JPEG Group.
+  Original IJG and libjpeg-turbo notices are retained.
+  The MPL-2.0 crates cssparser 0.38.0, cssparser-color 0.6.0,
+  cssparser-macros 0.7.0 and dtoa-short 0.3.5 have complete source companions
+  as described in SOURCE_AVAILABILITY.md.
+- Compiled backend runtime: original Nuitka AGPL-3.0 / Runtime Library
+  Exception, GCC GPL-3.0 / Runtime Library Exception, and MinGW-w64 notices
+  are at licenses/nuitka/, licenses/gcc/ and licenses/mingw-w64/. Preserve
+  their exact conditions; these are not blanket license substitutions.
+  The complete MinGW printf/Lucent notice is included. Other conservatively
+  retained helper notices do not assert that every helper was linked.
+
+Independent installation script
+
+install/Install-Reader.ps1 is AGPL-3.0-or-later, with complete source and
+license in the public repository. It is separate from the protected Reader
+application and its small startup wrappers. See install/LICENSE-SCOPE.md.
+
+Separately acquired components
+
+System Python, the NVIDIA driver, the parsing environment/models and Claude
+Code/Codex are not bundled. Each keeps its own vendor/upstream terms. The
+documented parser profile acquires locked PaddlePaddle GPU 3.3.1,
+PaddleOCR/PaddleX 3.7.0, NVIDIA runtime packages, and fixed-revision
+PaddleOCR-VL-1.6 and PP-DocLayoutV3 models. Installation guides identify their
+sources and the user's account responsibility. This notice does not relicense
+them or claim a complete installed-artifact audit of a user's environment.
+
+Evidence limits
+
+Original notices and pinned source companions are supplied without claiming
+reproduction of upstream native binaries or every recursive build input.
+FFmpeg interface-compatible replacement has not been tested here. The exact
+PDF.js QuickJS-wrapper build commit is unproved; the project's original
+notice is retained. Source/version correspondence and synthetic tests are
+not a clean-machine, GPU, paper-accuracy or live-AI guarantee.
+
+See SOURCE_AVAILABILITY.md for the matching third-party source downloads,
+hashes, source-selection details and retention requirements. No first-party
+restriction overrides rights granted by those third-party licenses.
