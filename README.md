@@ -2,7 +2,7 @@
 
 YANG Paper Reader is a standalone Windows application for reading research PDFs, local parsing, notes, and assistance through your own Claude Code or Codex account.
 
-**Windows preview: 0.1.0-public.1.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.1.0-public.1) and the installation instructions below. Confirm that the release contains its program asset before running the installer. These instructions do not establish successful installation or hardware compatibility on your PC.
+**Windows preview: 0.1.1-public.1.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.1.1-public.1) and the installation instructions below. Confirm that the release contains its program asset before running the installer. These instructions do not establish successful installation or hardware compatibility on your PC.
 
 ## Start here
 
@@ -13,7 +13,7 @@ Use this [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Pub
 3. Inspect the installation script and version metadata, choose the paths, then run:
 
 ```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.0-public.1 -RuntimePath C:\Reader_Runtime
+powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.1-public.1 -RuntimePath C:\Reader_Runtime
 ```
 
 The installer fetches the exact version named in `release.json` from this repository's GitHub Releases, verifies the program archive's size and SHA-256, places it in a new folder, and runs the existing pinned runtime setup. You do not build the private source or manually unpack the program archive. GitHub's repository ZIP is only one way to obtain the small setup files; the program archive is handled by the installer.
@@ -23,13 +23,13 @@ The Reader installer needs no Git, Node, compiler or external PowerShell module.
 For acquisition and placement without runtime setup:
 
 ```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.0-public.1 -DownloadOnly
+powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.1-public.1 -DownloadOnly
 ```
 
 This mode does not make the Reader ready to run. See the guide for completing setup later, unsigned-script guidance and recovery after a failure. After successful setup, you manually start the Reader:
 
 ```powershell
-& 'C:\Reader\0.1.0-public.1\YANG Paper Reader.exe'
+& 'C:\Reader\0.1.1-public.1\YANG Paper Reader.exe'
 ```
 
 ## Requirements and data use
@@ -47,3 +47,11 @@ If your own Claude/Codex helps with installation, give it [AI_ASSISTED_SETUP.md]
 - Third-party components keep their original rights. The installed program includes `LICENSE.txt`, `NOTICE.txt`, `THIRD_PARTY_NOTICES.txt` and the referenced license/source information. Keep them with the program.
 
 Share the official repository link. When reporting a problem there, include the version, failed stage and exact error, after removing paper content and personal details from logs. Installation checks do not certify every Windows/GPU combination, a successful AI request, or a clean-machine deployment.
+
+## Changes in 0.1.1-public.1
+
+- Runtime setup Audit compares the installation report, pinned package lock and shipped release catalog locally. The Audit stage makes no package-index request; package and model acquisition still need network access.
+- OCR polygon vertices at most one raster pixel outside a page edge are mapped onto that edge while the original coordinates remain recorded. Coordinates beyond the tolerance still fail validation.
+- Whole-paper Summary accepts a complete JSON response wrapped in one Markdown code block, then applies the existing content and citation checks. Invalid content remains an error.
+
+These changes do not establish successful parsing or AI behavior on every tester machine. Report the exact remaining error and stage after retesting.
