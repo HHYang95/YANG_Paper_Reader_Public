@@ -1,6 +1,6 @@
 # YANG Paper Reader: Standalone Manual
 
-**Windows preview: 0.1.1-public.1.** This manual describes the standalone program. Confirm download availability on the matching official release page; the manual does not establish completed installation on your PC.
+**Windows preview: 0.1.2-public.1.** This manual describes the standalone program. Confirm download availability on the matching official release page; the manual does not establish completed installation on your PC.
 
 This manual tells you, action by action, what to click, what the Reader then shows, what leaves your PC, and what to do when it stops.
 Start with [README.md](README.md) and [INSTALL_GUIDE.md](INSTALL_GUIDE.md) in the official public repository. The installer verifies and places the protected program, then prepares its runtime; you start the Reader yourself after successful setup. No private source build or manual program-archive handoff is required.
