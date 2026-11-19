@@ -65,10 +65,7 @@ INSTALL_GUIDE.md takes you through the installation.
      more request with more source from the same PDF, which can include
      whole pages of the PDF as images.
    - Auto Highlight sends the full parsed text of the paper for each pass.
-   - Make Study Guide (in HTML Overview) sends the parsed text of every page
-     and the images of the numbered Equations: three requests while the
-     paper's numbered Equations have not been read yet, one request
-     otherwise.
+   - HTML Overview uses the locally parsed paper and makes no AI request.
    - When the Reader checks which program version is installed, it sends
      nothing.
 
@@ -117,13 +114,15 @@ INSTALL_GUIDE.md takes you through the installation.
    stays locked and the Reader offers Retry Layout and Open Another PDF.
 
 
-4. No Retry for a failed Summary
+4. Recovering a Summary after a runtime or sign-in failure
 
-   The Reader prepares the automatic Summary of a paper once. If it fails or
-   is stopped, the Summary says why and offers no Retry, and the Reader does
-   not start it again for that paper. If the failed request had started, the
-   one automatic Summary update after the full parsing may still fill it.
-   Reset does not bring it back. Everything else keeps working.
+   Open the failed paper's Summary to see the reason. If the Reader can
+   confirm a runtime or sign-in failure, fix the installation or sign in,
+   then choose Retry Paper Summary. This sends one new request to your
+   selected AI account. The earlier failure stays in your reading record.
+   The retry is available once per PDF. Closing, reopening or resetting the
+   reading view keeps that limit. Older records with insufficient evidence
+   show their recorded reason. A saved summary remains available to read.
 
 
 5. Reset deletes a paper's notes
@@ -132,7 +131,7 @@ INSTALL_GUIDE.md takes you through the installation.
    highlights, its Explanation, Translate and other answers, its Auto
    Highlight set and the places of its record boxes. It asks first (Reset
    Reading Records, with Cancel as the default). It keeps the Whole Paper
-   Summary, the 5-Sentences Summary, the study guide of HTML Overview, the
+   Summary, the 5-Sentences Summary, the
    PDF, the parsed source and your reading position.
 
 

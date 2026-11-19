@@ -36,7 +36,7 @@ This mode does not make the Reader ready to run. See the guide for completing se
 
 Local parsing uses the first visible NVIDIA GPU (GPU 0), CUDA and bfloat16 (bf16); there is no CPU fallback. Minimum GPU memory and driver requirements have not been established. Historical measurements and the fresh synthetic compatibility check are explained in the installation guide.
 
-Opening a paper is a separate choice after installation: it can automatically send paper text and selected images to your own AI provider for Summary work, and bibliographic details to public lookup services. Setup does not open papers or use Make Study Guide. Read the [manual](MANUAL.md) before a paper trial.
+Opening a paper is a separate choice after installation: it can automatically send paper text and selected images to your own AI provider for Summary work, and bibliographic details to public lookup services. Setup does not open papers. After full Background Parsing, you can export the HTML Overview locally. Read the [manual](MANUAL.md) before a paper trial.
 
 If your own Claude/Codex helps with installation, give it [AI_ASSISTED_SETUP.md](AI_ASSISTED_SETUP.md). Keep account sign-in and credentials under your control.
 

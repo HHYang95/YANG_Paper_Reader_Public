@@ -12,7 +12,7 @@ Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. The Reader's small public insta
 4. Choose normal installation or `-DownloadOnly`. Normal mode runs pinned runtime setup and a fresh synthetic preflight. DownloadOnly only verifies and places the program; it performs no runtime setup or application launch.
 5. If the program download stops, restore the connection and run the same installer command with the original program path to recover the transfer. If runtime setup fails after program placement, keep the placed program, read the stage and logs, and retry its setup command as described in the installation guide.
 6. Sign in yourself through the AI vendor. The assistant may check version/discovery, but must not collect credentials, tokens, authentication files or browser-session data.
-7. You manually launch the Reader after successful setup. Check Ready to Read and AI Settings without opening a paper, then stop. An unexpected restored paper or processing is a reason to close and report it. Paper/AI trials and Make Study Guide are separate.
+7. You manually launch the Reader after successful setup. Check Ready to Read and AI Settings without opening a paper, then stop. An unexpected restored paper or processing is a reason to close and report it. Choose any paper or AI trial separately.
 8. Record observed versions, paths, results, logs and unknowns. A plan, old measurement, version string or synthetic check is not proof of a successful clean-machine installation or AI request.
 
 ## Copyable prompt
@@ -37,7 +37,7 @@ Preserve full archive hash/size checks, safe extraction, package pins and model 
 
 If runtime setup fails, preserve the placed program and read the stage, error and named logs. Retry its resources\backend\setup_runtime.cmd only after resolving the cause; do not reinstall into the occupied InstallPath or delete runtime data automatically.
 
-Leave sign-in and the final Reader launch to me. Do not open a paper, start a Reader AI request or use Make Study Guide as installation checks. Explain automatic Summary requests and public metadata lookup before any separately chosen paper trial.
+Leave sign-in and the final Reader launch to me. Do not open a paper or start a Reader AI request as an installation check. Explain automatic Summary requests and public metadata lookup before any separately chosen paper trial.
 
 Finish with exactly what changed, checks actually run, results, log paths and remaining limits. Do not claim GPU, AI, clean-machine or broad compatibility success from old evidence or synthetic tests.
 ```

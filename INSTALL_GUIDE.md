@@ -104,7 +104,7 @@ The installer downloads the pinned program archive, checks its size and SHA-256,
 
 If the program download stops before placement, restore the connection and run the same installer command with the same program path. Keep the partial download beside that path. When the server supports resuming, the installer requests the remaining bytes. If the server requires a fresh transfer, the installer downloads the whole archive. The console reports received bytes and progress. Extraction starts after the entire archive matches the published size and SHA-256.
 
-Runtime setup installs 111 pinned Python packages, downloads and verifies two model assets, runs a fresh synthetic GPU preflight, and writes the program's runtime profile. Valid acquisitions can be reused. Its `Runtime ready.` result means the setup's artifact and synthetic-operator checks passed; it does not verify a paper or an AI request. Historical package/model/check work took 26.5 minutes on one PC, not a promised duration.
+Runtime setup installs 111 pinned Python packages, downloads and verifies two model assets, runs a fresh synthetic GPU preflight, and writes the program's runtime profile. On retry, setup checks each cached package against its release SHA-256 digest, reuses verified files, and downloads incomplete or damaged packages again. The console reports transfer and verification progress. Its `Runtime ready.` result means the setup's artifact and synthetic-operator checks passed; it does not verify a paper or an AI request. Historical package/model/check work took 26.5 minutes on one PC, not a promised duration.
 
 A setup error is returned as a nonzero installer exit. Keep the failed stage, error and logs. The placed program remains available for diagnosis and setup retry. Do not rerun the installer into that occupied program folder; use section 5.
 
@@ -154,13 +154,13 @@ Do not open a paper during this startup check. If the Reader restores a recent p
 
 Opening a new PDF can automatically send every page's text for a Summary, then parsed text and selected source images for an update, through your own AI account. Bibliographic details also go to public lookup services. Choose a paper you may transmit and accept the account usage before opening it; read [MANUAL.md](MANUAL.md), section 1.
 
-Do not use Make Study Guide as an installation test. A synthetic check or successful startup does not establish paper accuracy, account access, an AI result or broad hardware compatibility.
+A synthetic check or successful startup does not establish paper accuracy, account access, an AI result or broad hardware compatibility.
 
 ## 8. Upgrade or remove
 
 For an upgrade, obtain the official repository files/metadata for the new published version and choose a new version-specific program directory. Close the old Reader. A compatible previously owned runtime folder may reuse valid downloads, but full setup checks it again. Use a new runtime directory if you need to preserve the old runtime unchanged. Keep old program/data folders until you decide they are no longer needed.
 
-The installer does not delete old versions or user data. The program directory, runtime directory, and `%APPDATA%\YANG Paper Reader` user records are separate. The latter includes notes, answers, parsing data and study guides. Back up records before choosing any removal; exported HTML Overviews remain where you saved them. Verify each exact folder and whether another release uses it before removing anything. Python and your AI tool are separate installations.
+The installer does not delete old versions or user data. The program directory, runtime directory, and `%APPDATA%\YANG Paper Reader` user records are separate. The latter includes notes, answers, parsing data and any study guides saved by older versions. Back up records before choosing any removal; exported HTML Overviews remain where you saved them. Verify each exact folder and whether another release uses it before removing anything. Python and your AI tool are separate installations.
 
 Report what was actually installed, exact versions, the failed stage/exit result and log locations. Review logs for paper content and personal paths before sharing them through the official repository. No clean-machine installation, compiler-free backend load on another PC, or live AI trial is established by these instructions.
 
