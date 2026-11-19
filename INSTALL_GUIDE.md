@@ -102,6 +102,8 @@ powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\
 
 The installer downloads the pinned program archive, checks its size and SHA-256, extracts it into an owned staging folder, checks the required executable/setup files, and places it without overwriting an installation. It then invokes `resources\backend\setup_runtime.cmd` with your runtime path. It does not open the Reader, sign in or change system Python/drivers.
 
+If the program download stops before placement, restore the connection and run the same installer command with the same program path. Keep the partial download beside that path. When the server supports resuming, the installer requests the remaining bytes. If the server requires a fresh transfer, the installer downloads the whole archive. The console reports received bytes and progress. Extraction starts after the entire archive matches the published size and SHA-256.
+
 Runtime setup installs 111 pinned Python packages, downloads and verifies two model assets, runs a fresh synthetic GPU preflight, and writes the program's runtime profile. Valid acquisitions can be reused. Its `Runtime ready.` result means the setup's artifact and synthetic-operator checks passed; it does not verify a paper or an AI request. Historical package/model/check work took 26.5 minutes on one PC, not a promised duration.
 
 A setup error is returned as a nonzero installer exit. Keep the failed stage, error and logs. The placed program remains available for diagnosis and setup retry. Do not rerun the installer into that occupied program folder; use section 5.
@@ -126,7 +128,8 @@ Every full setup runs a fresh synthetic check, including after a driver, GPU or 
 
 | Failed stage or observation | Next action |
 | --- | --- |
-| Release not published, download missing or interrupted | Check the official release status and exact error. Do not invent another URL or use an unofficial mirror. |
+| Program download interrupted before placement | Restore connectivity and rerun the same installer command. The console shows whether the transfer resumes or starts again. |
+| Release not published or download missing | Check the pinned version and its official GitHub release. |
 | Archive size/hash mismatch or unsafe entry | Stop. Keep the metadata and error for diagnosis; do not disable verification or extract the rejected archive manually. |
 | Program destination occupied or paths rejected | Choose a new ordinary local destination and separate runtime path. Preserve existing files. |
 | Runtime folder contains unowned files | Choose a new empty runtime folder. Do not clear an unrelated folder to pass the check. |

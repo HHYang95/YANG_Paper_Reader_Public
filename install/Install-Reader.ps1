@@ -66,8 +66,198 @@ function Read-ReaderMetadata([string]$Path) {
     return $m
 }
 
-function Invoke-ReaderDownload([string]$Url, [string]$Destination) {
-    Invoke-WebRequest -UseBasicParsing -Uri $Url -OutFile $Destination
+function Assert-ReaderOwnedFile([IO.FileStream]$Stream, [string]$Path) {
+    Assert-ReaderAncestors $Path
+    if (-not ('ReaderArchiveNative' -as [type])) {
+        Add-Type -TypeDefinition @'
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+public static class ReaderArchiveNative {
+    [StructLayout(LayoutKind.Sequential)] struct Info {
+        public uint Attributes;
+        public System.Runtime.InteropServices.ComTypes.FILETIME Creation, Access, Write;
+        public uint Volume, SizeHigh, SizeLow, Links, IndexHigh, IndexLow;
+    }
+    [DllImport("kernel32.dll", SetLastError=true)]
+    static extern bool GetFileInformationByHandle(SafeFileHandle handle, out Info info);
+    public static void AssertSingleLink(FileStream stream) {
+        Info info;
+        if (!GetFileInformationByHandle(stream.SafeFileHandle, out info))
+            throw new IOException("Cannot inspect the archive cache file.");
+        if (info.Links != 1 || (info.Attributes & 0x410) != 0)
+            throw new IOException("Archive cache files must be regular, unlinked files.");
+    }
+}
+'@
+    }
+    [ReaderArchiveNative]::AssertSingleLink($Stream)
+}
+
+function Get-ReaderStreamDigest([IO.Stream]$Stream) {
+    $position = $Stream.Position
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try {
+        $Stream.Position = 0
+        return [BitConverter]::ToString($sha.ComputeHash($Stream)).Replace('-', '').ToLowerInvariant()
+    } finally { $Stream.Position = $position; $sha.Dispose() }
+}
+
+function Open-ReaderArchiveCache([string]$Parent, [string]$Stage, [string]$Destination, $Metadata) {
+    $owner = [ordered]@{schema='reader-program-download-v1'; installPath=$Destination.ToLowerInvariant();
+        url=[string]$Metadata.asset.url; sha256=([string]$Metadata.asset.sha256).ToLowerInvariant();
+        bytes=[long]$Metadata.asset.bytes; rootDirectory=[string]$Metadata.asset.rootDirectory} | ConvertTo-Json -Compress
+    $encoding = New-Object Text.UTF8Encoding $false
+    $identity = New-Object IO.MemoryStream (,$encoding.GetBytes($owner))
+    try { $key = Get-ReaderStreamDigest $identity } finally { $identity.Dispose() }
+    $root = Join-Path $Parent ('.reader-download-' + $key)
+    Assert-ReaderAncestors $root
+    if (-not (Test-Path -LiteralPath $root)) {
+        # Publish a complete ownership marker atomically, before any network activity.
+        $prepared = Join-Path $Stage 'archive-cache'
+        [void][IO.Directory]::CreateDirectory($prepared)
+        $marker = [IO.File]::Open((Join-Path $prepared 'owner.json'), 'CreateNew', 'Write', 'None')
+        try { $bytes = $encoding.GetBytes($owner); $marker.Write($bytes, 0, $bytes.Length); $marker.Flush($true) }
+        finally { $marker.Dispose() }
+        try { [IO.Directory]::Move($prepared, $root) }
+        catch { if (-not (Test-Path -LiteralPath $root -PathType Container)) { throw } }
+    }
+    Assert-ReaderAncestors $root
+    if (-not (Test-Path -LiteralPath $root -PathType Container)) { throw 'The archive cache is not a directory.' }
+    foreach ($item in Get-ChildItem -LiteralPath $root -Force) {
+        if ($item.Name -cnotin @('owner.json','archive.part','activity.lock') -or $item.PSIsContainer -or
+            ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Unrelated or redirected data occupies the archive cache; nothing was overwritten.' }
+    }
+    $markerPath = Join-Path $root 'owner.json'
+    $marker = [IO.File]::Open($markerPath, 'Open', 'Read', 'Read')
+    try {
+        Assert-ReaderOwnedFile $marker $markerPath
+        if ($marker.Length -ne $encoding.GetByteCount($owner)) { throw 'The archive cache ownership marker does not match this installation.' }
+        $reader = New-Object IO.StreamReader ($marker, $encoding)
+        try { if ($reader.ReadToEnd() -cne $owner) { throw 'The archive cache belongs to a different installation.' } }
+        finally { $reader.Dispose() }
+    } finally { $marker.Dispose() }
+    # CreateNew never opens an unrelated lock file. Windows removes this owned lock
+    # when its exclusive handle closes, including after hard process termination.
+    $lockPath = Join-Path $root 'activity.lock'
+    Assert-ReaderAncestors $lockPath
+    try { $lock = [IO.FileStream]::new($lockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None, 4096, [IO.FileOptions]::DeleteOnClose) }
+    catch { throw 'Another installer is using this archive cache, or an unrelated lock occupies it. Retry after the active installer stops.' }
+    return [pscustomobject]@{Root=$root; Archive=(Join-Path $root 'archive.part'); Marker=$markerPath; Lock=$lock}
+}
+
+function Remove-ReaderArchiveCache($Cache) {
+    # Delete only the known owned files; never recursively remove a cache directory.
+    foreach ($file in @($Cache.Archive, $Cache.Marker)) {
+        Assert-ReaderAncestors $file
+        if (Test-Path -LiteralPath $file) {
+            $handle = [IO.File]::Open($file, 'Open', 'Read', 'None')
+            try { Assert-ReaderOwnedFile $handle $file } finally { $handle.Dispose() }
+            [IO.File]::Delete($file)
+        }
+    }
+    $Cache.Lock.Dispose()
+    Assert-ReaderAncestors $Cache.Root
+    [IO.Directory]::Delete($Cache.Root, $false)
+}
+
+function Open-ReaderDownload([uri]$Url, [long]$Start = 0) {
+    for ($redirect = 0; $redirect -le 10; $redirect++) {
+        if ($Url.Scheme -ne 'https') { throw 'The program download requires HTTPS.' }
+        $request = [Net.WebRequest]::Create($Url)
+        $request.UserAgent = 'YANG-Paper-Reader-Installer'
+        $request.AllowAutoRedirect = $false
+        if ($Start -gt 0) { $request.AddRange($Start) }
+        try { $response = $request.GetResponse() }
+        catch [Net.WebException] { if (-not $_.Exception.Response) { throw }; $response = $_.Exception.Response }
+        if ([int]$response.StatusCode -notin @(301, 302, 303, 307, 308)) { return $response }
+        try {
+            $location = $response.Headers['Location']
+            if ([int]$response.StatusCode -notin @(301, 302, 303, 307, 308) -or -not $location) {
+                throw "Unexpected program download response: HTTP $([int]$response.StatusCode)."
+            }
+            $Url = [uri]::new($Url, $location)
+        } finally { $response.Dispose() }
+    }
+    throw 'Too many redirects while downloading the program.'
+}
+
+function Invoke-ReaderDownload([string]$Url, [string]$Destination, [long]$ExpectedBytes, [string]$ExpectedSha256) {
+    if ($ExpectedBytes -le 0 -or $ExpectedBytes -gt 2GB -or $ExpectedSha256 -notmatch '^[a-fA-F0-9]{64}$') { throw 'Invalid published archive identity.' }
+    Assert-ReaderAncestors $Destination
+    $output = $null
+    try {
+        $mode = if (Test-Path -LiteralPath $Destination) { [IO.FileMode]::Open } else { [IO.FileMode]::CreateNew }
+        $output = [IO.File]::Open($Destination, $mode, 'ReadWrite', 'None')
+        Assert-ReaderOwnedFile $output $Destination
+        $freshRetryUsed = $false
+        $freshRequested = $false
+        if ($output.Length -ge $ExpectedBytes) {
+            if ($output.Length -eq $ExpectedBytes -and (Get-ReaderStreamDigest $output) -ieq $ExpectedSha256) {
+                Write-Host 'Reusing the complete program archive after size and SHA-256 verification.'
+                return
+            }
+            Write-Host 'The retained complete archive is invalid. Starting one fresh transfer.'
+            $freshRetryUsed = $true; $freshRequested = $true
+        }
+        $buffer = New-Object byte[] 65536
+        while ($true) {
+            [long]$start = if ($freshRequested) { 0 } else { $output.Length }
+            if ($start -gt 0) { Write-Host "Resuming program download at $start of $ExpectedBytes bytes." }
+            $response = Open-ReaderDownload $Url $start
+            $rangeFailure = $null
+            try {
+                $status = [int]$response.StatusCode
+                if ($status -eq 206) {
+                    $match = [regex]::Match([string]$response.Headers['Content-Range'], '^(?i:bytes) ([0-9]+)-([0-9]+)/([0-9]+)$')
+                    [long]$first = 0; [long]$last = 0; [long]$total = 0
+                    if ($freshRequested -or -not $match.Success -or -not [long]::TryParse($match.Groups[1].Value, [ref]$first) -or
+                        -not [long]::TryParse($match.Groups[2].Value, [ref]$last) -or -not [long]::TryParse($match.Groups[3].Value, [ref]$total) -or
+                        $first -ne $start -or $last -ne $ExpectedBytes - 1 -or $total -ne $ExpectedBytes -or
+                        ($response.ContentLength -ge 0 -and $response.ContentLength -ne $ExpectedBytes - $start)) {
+                        $rangeFailure = 'The server returned an invalid program Content-Range or payload length.'
+                    }
+                } elseif ($status -eq 200) {
+                    # A server ignoring Range already supplied the fresh response: do not GET twice.
+                    if ($response.ContentLength -ge 0 -and $response.ContentLength -ne $ExpectedBytes) {
+                        $rangeFailure = 'The full response length does not match the published archive size.'
+                    } else {
+                        if ($start -gt 0) { Write-Host 'The server ignored the resume request. Restarting the program download from byte zero using this response.' }
+                        $output.SetLength(0); $start = 0
+                    }
+                } elseif ($status -eq 416) { $rangeFailure = 'The server rejected the requested archive range (HTTP 416).' }
+                else { throw "The program download returned HTTP $status. The retained archive prefix was not changed." }
+                if (-not $rangeFailure) {
+                    $inputStream = $response.GetResponseStream()
+                    $output.Position = $start
+                    [long]$received = $start
+                    $reportedPercent = -5
+                    $timer = [Diagnostics.Stopwatch]::StartNew()
+                    while (($count = $inputStream.Read($buffer, 0, $buffer.Length)) -gt 0) {
+                        if ($count -gt $ExpectedBytes - $received) { throw 'The download exceeds the published archive size.' }
+                        $output.Write($buffer, 0, $count)
+                        $received += $count
+                        $percent = [int][Math]::Floor(100.0 * $received / $ExpectedBytes)
+                        if ($percent -ge $reportedPercent + 5 -or $timer.Elapsed.TotalSeconds -ge 1 -or $received -eq $ExpectedBytes) {
+                            $output.Flush($true)
+                            Write-Host "Downloading: $received of $ExpectedBytes bytes ($percent%)."
+                            $reportedPercent = $percent; $timer.Restart()
+                        }
+                    }
+                    if ($received -ne $ExpectedBytes) { throw "Program download was interrupted at $received of $ExpectedBytes bytes. The available prefix is retained." }
+                }
+            } finally { $response.Dispose() }
+            if (-not $rangeFailure -and (Get-ReaderStreamDigest $output) -ieq $ExpectedSha256) { return }
+            $failure = if ($rangeFailure) { $rangeFailure } else { 'Downloaded archive SHA-256 does not match release metadata.' }
+            if ($freshRetryUsed) { throw "$failure The one fresh transfer also failed; the program was not installed." }
+            Write-Host "$failure Starting one fresh transfer."
+            # Keep the previous prefix until the clean request has a usable full response.
+            $freshRetryUsed = $true; $freshRequested = $true
+        }
+    } finally {
+        if ($output) { try { $output.Flush($true) } finally { $output.Dispose() } }
+    }
 }
 
 function Invoke-ReaderRuntime([string]$SetupPath, [string]$SelectedRuntimePath) {
@@ -156,6 +346,8 @@ function Invoke-ReaderInstall([string]$InstallPath, [string]$RuntimePath, [switc
     $stageName = 'inputs'
     $stage = $null
     $ownedStage = $false
+    $archiveCache = $null
+    $verifiedArchive = $null
     try {
         if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) { throw 'Native Windows is required.' }
         $destination = Resolve-ReaderPath $InstallPath 'InstallPath' 80
@@ -176,27 +368,46 @@ function Invoke-ReaderInstall([string]$InstallPath, [string]$RuntimePath, [switc
         if (Test-Path -LiteralPath $stage) { throw 'Staging path unexpectedly exists.' }
         [void][IO.Directory]::CreateDirectory($stage)
         $ownedStage = $true
-        $archive = Join-Path $stage 'download.zip'
+        $stageName = 'archive cache'
+        $archiveCache = Open-ReaderArchiveCache $parent $stage $destination $metadata
+        $archive = $archiveCache.Archive
         $stageName = 'download'
         Write-Host "Downloading version $($metadata.version) from $($metadata.asset.url)"
-        Invoke-ReaderDownload $metadata.asset.url $archive
+        Write-Host "Expected program download: $($metadata.asset.bytes) bytes."
+        Write-Host "Persistent program download: $archive"
+        Invoke-ReaderDownload $metadata.asset.url $archive $metadata.asset.bytes $metadata.asset.sha256
         $stageName = 'archive verification'
+        Write-Host 'Checking the program archive size and SHA-256.'
         if (-not (Test-Path -LiteralPath $archive -PathType Leaf)) { throw 'The download did not produce an archive.' }
         Assert-ReaderAncestors $archive
-        if ((Get-Item -LiteralPath $archive).Length -ne [long]$metadata.asset.bytes) { throw 'Downloaded archive size does not match release metadata.' }
-        if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash -ine $metadata.asset.sha256) { throw 'Downloaded archive SHA-256 does not match release metadata.' }
+        # Hold the verified bytes against writers/deletion until ZipFile.OpenRead finishes.
+        $verifiedArchive = [IO.File]::Open($archive, 'Open', 'Read', 'Read')
+        Assert-ReaderOwnedFile $verifiedArchive $archive
+        $actualBytes = $verifiedArchive.Length
+        Write-Host "Received $actualBytes of $($metadata.asset.bytes) expected bytes."
+        if ($actualBytes -ne [long]$metadata.asset.bytes) {
+            throw "Downloaded archive size does not match release metadata. Received $actualBytes of $($metadata.asset.bytes) expected bytes."
+        }
+        if ((Get-ReaderStreamDigest $verifiedArchive) -ine $metadata.asset.sha256) { throw 'Downloaded archive SHA-256 does not match release metadata.' }
         $stageName = 'archive validation and extraction'
+        Write-Host 'Program archive size and SHA-256 verified. Checking archive entries and extracting the program.'
         Expand-ReaderArchive $archive $stage $destination $metadata.asset.rootDirectory
+        $verifiedArchive.Dispose(); $verifiedArchive = $null
         $stagedProduct = Join-Path $stage $metadata.asset.rootDirectory
         foreach ($required in @('YANG Paper Reader.exe', 'resources\backend\setup_runtime.cmd')) {
             $file = Join-Path $stagedProduct $required
             if (-not (Test-Path -LiteralPath $file -PathType Leaf) -or (Get-Item -LiteralPath $file).Length -eq 0) { throw "Required nonempty program file is missing: $required" }
         }
         $stageName = 'placement'
+        Write-Host "Placing the verified program in $destination."
         Assert-ReaderAncestors $destination
         if (Test-Path -LiteralPath $destination) { throw 'InstallPath appeared during preparation; refusing to overwrite it.' }
         [IO.Directory]::Move($stagedProduct, $destination)
-        Remove-ReaderStage $stage $parent
+        try { Remove-ReaderArchiveCache $archiveCache }
+        catch { Write-Warning "Program placement succeeded; owned archive cache cleanup failed at $($archiveCache.Root). $($_.Exception.Message)" }
+        finally { $archiveCache.Lock.Dispose(); $archiveCache = $null }
+        try { Remove-ReaderStage $stage $parent }
+        catch { Write-Warning "Program placement succeeded; owned staging cleanup failed at $stage. $($_.Exception.Message)" }
         $ownedStage = $false
         if ($DownloadOnly) {
             Write-Host "Verified program placed at $destination. Runtime setup was not run; the app was not started."
@@ -210,8 +421,16 @@ function Invoke-ReaderInstall([string]$InstallPath, [string]$RuntimePath, [switc
         } else { Write-Host "Runtime setup exited successfully. Program is at $destination; the app was not started." }
         return [pscustomobject]@{ExitCode=[int]$code; Installed=$true; RuntimeSetup=$true; Path=$destination}
     } catch {
-        throw "FAILED [$stageName]: $($_.Exception.Message)"
+        $reason = $_.Exception.Message
+        if ($stageName -eq 'download') {
+            $reason += ' Check the connection and run the same installer command again.'
+        } elseif ($stageName -eq 'archive verification') {
+            $reason += ' Check your connection and the version in the official release metadata, then run the same installer command again.'
+        }
+        throw "FAILED [$stageName]: $reason"
     } finally {
+        if ($verifiedArchive) { $verifiedArchive.Dispose() }
+        if ($archiveCache) { $archiveCache.Lock.Dispose() }
         if ($ownedStage) {
             try { Remove-ReaderStage $stage ([IO.Path]::GetDirectoryName($stage)) }
             catch { Write-Warning "Owned staging cleanup failed; retained $stage. $($_.Exception.Message)" }
