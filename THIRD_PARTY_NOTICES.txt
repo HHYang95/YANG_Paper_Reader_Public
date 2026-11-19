@@ -18,8 +18,8 @@ Bundled components
   ICC and WebAssembly assets have separate included notices, including
   Adobe, PDFium/Foxit, Liberation's font exception, OpenJPEG, qcms, QuickJS,
   Mozilla wrapper and Brotli notices. These assets are not all Apache-only.
-- KaTeX 0.19.0: MIT at licenses/katex/LICENSE. The original notice is also
-  included with its CSS/fonts in exported HTML Overviews.
+- KaTeX 0.19.0: MIT at licenses/katex/LICENSE. The original notice is retained
+  with the bundled KaTeX assets. Earlier HTML exports may also include them.
 - @napi-rs/canvas 1.0.11 and its Windows native package: MIT wrapper notice,
   original native SBOM, Rust crate notices and native dependency notices at
   licenses/canvas/. Multiple/per-file terms remain applicable, including

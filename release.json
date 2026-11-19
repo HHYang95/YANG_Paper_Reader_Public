@@ -1,11 +1,11 @@
 {
   "schema": "reader-public-install-v1",
-  "version": "0.1.2-public.1",
+  "version": "0.1.3",
   "repository": "HHYang95/YANG_Paper_Reader_Public",
   "asset": {
-    "url": "https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.1.2-public.1/YANG_Paper_Reader_0.1.2_public.1.zip",
-    "bytes": 182644005,
-    "sha256": "8f4d35b0ed01f4d192fc46f00fc0e1b25aa0d823f59405c9fa5c94890b23a15c",
-    "rootDirectory": "YANG_Paper_Reader_0.1.2_public.1"
+    "url": "https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.1.3/YANG_Paper_Reader_0.1.3.zip",
+    "bytes": 182674655,
+    "sha256": "d7d1639b1fd9858b7100369eb16b5fb1fbab4fd459b02db4fcdab0a8e76efe96",
+    "rootDirectory": "YANG_Paper_Reader_0.1.3"
   }
 }

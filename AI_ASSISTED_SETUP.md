@@ -1,6 +1,6 @@
 # Install with help from your Claude or Codex
 
-**Windows preview: 0.1.2-public.1.** Start from the [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Public) and its matching release. Verify actual download availability and each installation result; do not infer them from the existence of these instructions.
+**Stable Windows release: 0.1.3.** Start from the [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Public) and its matching release. Verify actual download availability and each installation result; do not infer them from the existence of these instructions.
 
 Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. The Reader's small public installer downloads and verifies the compiled/obfuscated program, places it, then runs its pinned runtime setup. The main source remains private. Small readable startup files in the application retain the application's terms; the independent public installer alone uses AGPL-3.0-or-later. Python, the NVIDIA driver and your AI command-line tool are separate choices using official vendor instructions; account sign-in remains yours.
 
@@ -20,7 +20,7 @@ Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. The Reader's small public insta
 ```text
 Help me install YANG Paper Reader from https://github.com/HHYang95/YANG_Paper_Reader_Public using README.md, INSTALL_GUIDE.md and AI_ASSISTED_SETUP.md.
 
-First check the public release status. The target is 0.1.2-public.1; do not claim it is available merely because the files describe it. Read the official script, release.json and license scope. Do not build the private application source or invent download URLs. Git is optional for obtaining the repository files.
+First check the public release status. The target is 0.1.3; do not claim it is available merely because the files describe it. Read the official script, release.json and license scope. Do not build the private application source or invent download URLs. Git is optional for obtaining the repository files.
 
 Explain the exact changes before running installation commands. Keep the protected application and its minimal readable startup files under their application terms, separate from the independent AGPL-3.0-or-later installer. Preserve third-party rights and supplied notices.
 
@@ -29,7 +29,7 @@ Check native Windows 64-bit, Python 3.12 x64 and NVIDIA GPU/driver visibility. R
 Explain that local parsing uses GPU 0 and bf16 with no CPU fallback. Historical VRAM figures are not minimum-hardware guarantees. Rendering and my external AI service are separate from local parsing.
 
 Choose a new short local InstallPath and a separate RuntimePath with me. From the repository folder, the normal command is:
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.2-public.1 -RuntimePath C:\Reader_Runtime
+powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -RuntimePath C:\Reader_Runtime
 
 If I choose acquisition/placement only, use -DownloadOnly and omit RuntimePath. This is not completed runtime setup. Follow the guide's unsigned-script instructions without globally changing execution policy or overriding organization policy.
 
@@ -44,4 +44,4 @@ Finish with exactly what changed, checks actually run, results, log paths and re
 
 ## Patch installation checks
 
-For 0.1.2-public.1, follow the installation guide's update instructions. Preserve the previous program and diagnostic evidence. Audit uses the shipped release catalog locally; downloads of the program, packages and models remain separate network operations. Read `artifact-audit.pending.json` and `logs/audit.log` for an Audit failure. Do not disable antivirus or bypass hash checks. A completed setup does not establish the tester's parsing or Summary result.
+For 0.1.3, follow the installation guide's update instructions. Preserve the previous program and diagnostic evidence. Audit uses the shipped release catalog locally; downloads of the program, packages and models remain separate network operations. Read `artifact-audit.pending.json` and `logs/audit.log` for an Audit failure. Do not disable antivirus or bypass hash checks. A completed setup does not establish the tester's parsing or Summary result.

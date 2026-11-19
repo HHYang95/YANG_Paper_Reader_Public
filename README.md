@@ -2,7 +2,7 @@
 
 YANG Paper Reader is a standalone Windows application for reading research PDFs, local parsing, notes, and assistance through your own Claude Code or Codex account.
 
-**Windows preview: 0.1.2-public.1.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.1.2-public.1) and the installation instructions below. Confirm that the release contains its program asset before running the installer. These instructions do not establish successful installation or hardware compatibility on your PC.
+**Stable Windows release: 0.1.3.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.1.3) and the installation instructions below. Confirm that the release contains its program asset before running the installer. These instructions do not establish successful installation or hardware compatibility on your PC.
 
 ## Start here
 
@@ -13,7 +13,7 @@ Use this [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Pub
 3. Inspect the installation script and version metadata, choose the paths, then run:
 
 ```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.2-public.1 -RuntimePath C:\Reader_Runtime
+powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -RuntimePath C:\Reader_Runtime
 ```
 
 The installer fetches the exact version named in `release.json` from this repository's GitHub Releases, verifies the program archive's size and SHA-256, places it in a new folder, and runs the existing pinned runtime setup. You do not build the private source or manually unpack the program archive. GitHub's repository ZIP is only one way to obtain the small setup files; the program archive is handled by the installer.
@@ -23,13 +23,13 @@ The Reader installer needs no Git, Node, compiler or external PowerShell module.
 For acquisition and placement without runtime setup:
 
 ```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.2-public.1 -DownloadOnly
+powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -DownloadOnly
 ```
 
 This mode does not make the Reader ready to run. See the guide for completing setup later, unsigned-script guidance and recovery after a failure. After successful setup, you manually start the Reader:
 
 ```powershell
-& 'C:\Reader\0.1.2-public.1\YANG Paper Reader.exe'
+& 'C:\Reader\0.1.3\YANG Paper Reader.exe'
 ```
 
 ## Requirements and data use
@@ -63,3 +63,12 @@ These changes do not establish successful parsing or AI behavior on every tester
 - Find discards delayed indexing results after switching documents and refreshes a retained query when the Find panel is reopened.
 
 Retest your original paper and preserve the exact error and stage if a failure remains. Local release verification does not establish real-paper accuracy or compatibility on every machine.
+
+## Changes in 0.1.3
+
+- Interrupted program transfers resume from an owned partial download; runtime setup reuses verified wheel downloads. Hash checks remain required.
+- Parsing caches include their exact pipeline template identity. Queue cancellation and saved request handling retain their recorded outcomes.
+- Source comparisons support equation symbols and conservative prose spelling checks, with the original regions available for review. Notes can be filtered, and saved citations navigate to an exact original passage when its location is unique.
+- The local HTML Overview uses parsed paper content and source crops. Bibliographic recovery, public metric labels and copied BibTeX keys retain their source distinctions.
+
+This stable release does not replace a clean-PC installation check or acceptance of a result on your own paper. Existing original PDFs, reading records and prior exports should be preserved when upgrading.

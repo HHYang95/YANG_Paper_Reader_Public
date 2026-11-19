@@ -1,6 +1,6 @@
 # YANG Paper Reader: Standalone Manual
 
-**Upcoming Windows preview.** This manual describes the standalone program. Confirm download availability on the matching official release page; the manual does not establish completed installation on your PC.
+**Stable Windows release: 0.1.3.** This manual describes the standalone program. Confirm download availability on the matching official release page; the manual does not establish completed installation on your PC.
 
 This manual tells you, action by action, what to click, what the Reader then shows, what leaves your PC, and what to do when it stops.
 Start with [README.md](README.md) and [INSTALL_GUIDE.md](INSTALL_GUIDE.md) in the official public repository. The installer verifies and places the protected program, then prepares its runtime; you start the Reader yourself after successful setup. No private source build or manual program-archive handoff is required.
@@ -38,6 +38,8 @@ Sent: Nothing. A web link you click in the PDF opens in your web browser.
 
 If it stops: while Preparing Page Layout shows, the pages are locked: see section 1. If a link cannot open, the footer says Link unavailable with the reason. If the reading place cannot be saved, the footer says so; Queue & Program Status (section 10) gives the reason.
 
+After full Background Parsing, select **Parsed Text** in the reading toolbar. Choose a page to view its passages. **Copy Reading** copies the displayed text. When a spelling can be verified in the same passage of the original PDF, the reading shows the supported spelling and **Compare parsed text** reveals the earlier reading. An uncertain passage shows the parser text and offers **View Original** at its PDF location.
+
 ## 4. Paper Information and the 5-Sentences Summary
 
 Do: click Paper Information in the left panel. Click 5-Sentences Summary, below it, to read the paper's Summary in five sentences.
@@ -47,6 +49,8 @@ You see: Paper Information shows the title, the authors, the journal, the year a
 Sent: Refresh (Retry after a failed lookup) sends the lookup of section 1 again: the DOI, or the details section 1 names, to Crossref (api.crossref.org), and the journal's name to lab.peptide.ink once Crossref matches the paper. Opening Paper Information can start the same lookup when none has finished for the paper's current details. Copy Title, Copy Citation and 5-Sentences Summary send nothing. A link you click here (Crossref, Publisher or the journal's metrics page) opens in your web browser.
 
 If it stops: Citations that read Unmatched, with "No confident Crossref match.", mean that Crossref did not confirm the paper: check the DOI in the PDF, then click Refresh. Citations that read Unavailable, with "Crossref unavailable." or "Metrics unavailable.", mean that the lookup got no answer: check the internet connection, then click Retry. If the Summary failed, 5-Sentences Summary reads Summary Needs Attention: click it to read why, then use the button it offers (View Summary Request, Open AI Settings, Retry Parsing or Open PDF Again). If Reader confirms that the selected runtime was missing or could not sign in, fix the installation or sign-in, then choose Retry Paper Summary. This sends one new request for this PDF to the runtime you selected. Reopening the PDF does not send the retry. See NOTICE.txt, item 4.
+
+In BibTeX, the entry key uses the available first author, publication year and first title word, followed by a short identifier derived from the DOI or, when a DOI is unavailable, the PDF fingerprint. Preview and copy use the same key. A later metadata lookup can fill missing parts of the key in subsequent copies.
 
 ## 5. Select text: Translate, Ask, Highlight, Note
 

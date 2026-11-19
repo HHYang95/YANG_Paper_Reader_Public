@@ -1,10 +1,10 @@
 # Install YANG Paper Reader on Windows
 
-**Windows preview: 0.1.2-public.1.** The following instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.1.2-public.1). Confirm that its program asset is available before running the installer. These instructions are not a completed installation or hardware-compatibility result.
+**Stable Windows release: 0.1.3.** The following instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.1.3). Confirm that its program asset is available before running the installer. These instructions are not a completed installation or hardware-compatibility result.
 
 ## 1. Obtain the repository files
 
-Start at the [official YANG Paper Reader repository](https://github.com/HHYang95/YANG_Paper_Reader_Public). Use a repository revision whose `release.json` identifies version `0.1.2-public.1`.
+Start at the [official YANG Paper Reader repository](https://github.com/HHYang95/YANG_Paper_Reader_Public). Use a repository revision whose `release.json` identifies version `0.1.3`.
 
 Git is not required. Choose **Code > Download ZIP**, extract the repository folder, and open PowerShell in the folder containing `release.json` and `install/`. Keep their relative locations intact. This ZIP contains repository documentation and installation files; the installer acquires and unpacks the program itself.
 
@@ -72,11 +72,11 @@ Get-Content -LiteralPath .\release.json
 Get-Content -LiteralPath .\install\Install-Reader.ps1
 ```
 
-Check that the metadata names this repository and version `0.1.2-public.1`. The installer accepts the version-pinned GitHub Releases URL, verifies the full archive size and SHA-256 before extraction, and refuses unsafe archive paths. There is no fallback to a moving latest release. Metadata and script must come from the trusted official repository; a checksum does not independently establish that trust.
+Check that the metadata names this repository and version `0.1.3`. The installer accepts the version-pinned GitHub Releases URL, verifies the full archive size and SHA-256 before extraction, and refuses unsafe archive paths. There is no fallback to a moving latest release. Metadata and script must come from the trusted official repository; a checksum does not independently establish that trust.
 
 Use short absolute paths on a local fixed drive. The program destination must not already exist and is limited to 80 characters; the runtime path is limited to 60 characters with no spaces. Paths containing traversal, reserved names or shell metacharacters are rejected. For example:
 
-- Program: `C:\Reader\0.1.2-public.1`, a new destination.
+- Program: `C:\Reader\0.1.3`, a new destination.
 - Runtime: `C:\Reader_Runtime`, separate from the program and with no spaces.
 
 Do not overlap these paths or place either inside the other. Avoid linked, synchronized or network folders. The installer refuses an occupied program destination and redirected ancestors. Existing runtime files are handled by the backend's ownership checks; neither the installer nor this guide deletes them automatically.
@@ -97,7 +97,7 @@ Unblocking does not override `Restricted`, `AllSigned` or organizational policy.
 Close any running Reader and save your work. From the repository folder:
 
 ```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.2-public.1 -RuntimePath C:\Reader_Runtime
+powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -RuntimePath C:\Reader_Runtime
 ```
 
 The installer downloads the pinned program archive, checks its size and SHA-256, extracts it into an owned staging folder, checks the required executable/setup files, and places it without overwriting an installation. It then invokes `resources\backend\setup_runtime.cmd` with your runtime path. It does not open the Reader, sign in or change system Python/drivers.
@@ -113,7 +113,7 @@ A setup error is returned as a nonzero installer exit. Keep the failed stage, er
 To acquire, verify and place the program without executing runtime setup:
 
 ```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.2-public.1 -DownloadOnly
+powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -DownloadOnly
 ```
 
 `RuntimePath` may be omitted in this mode. No packages/models are installed, no GPU check runs and the application is not launched.
@@ -121,7 +121,7 @@ powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\
 After completing prerequisites, finish setup from the placed program, or retry it after correcting a runtime-setup failure:
 
 ```powershell
-& 'C:\Reader\0.1.2-public.1\resources\backend\setup_runtime.cmd' 'C:\Reader_Runtime'
+& 'C:\Reader\0.1.3\resources\backend\setup_runtime.cmd' 'C:\Reader_Runtime'
 ```
 
 Every full setup runs a fresh synthetic check, including after a driver, GPU or Reader change. The 180-second preflight process limit is a safety limit, not a minimum-GPU benchmark. The advanced `--profile-only` mode does not recheck current compatibility.
@@ -143,7 +143,7 @@ A failed fresh check does not reuse an earlier successful preflight. Do not infe
 Only after successful runtime setup:
 
 ```powershell
-& 'C:\Reader\0.1.2-public.1\YANG Paper Reader.exe'
+& 'C:\Reader\0.1.3\YANG Paper Reader.exe'
 ```
 
 Read the installed `LICENSE.txt`, `NOTICE.txt` and `THIRD_PARTY_NOTICES.txt`. The application is unsigned; Windows may warn or block it. Keep the exact message and respect organizational protections.
@@ -166,7 +166,7 @@ Report what was actually installed, exact versions, the failed stage/exit result
 
 ### Updating an existing installation
 
-Keep the previous program folder and obtain the repository files for 0.1.2-public.1. Use a new program destination such as `C:\Reader\0.1.2-public.1`; the installer refuses an occupied program destination. Close the Reader before setup. The existing Reader-owned runtime folder may be reused only through the normal full setup path, which runs the offline Audit and synthetic preflight again. Keep the previous runtime evidence if diagnosis is in progress. For an isolated installation, choose a new empty runtime folder. Do not remove an unrelated folder or reset paper data to make setup pass.
+Keep the previous program folder and obtain the repository files for 0.1.3. Use a new program destination such as `C:\Reader\0.1.3`; the installer refuses an occupied program destination. Close the Reader before setup. The existing Reader-owned runtime folder may be reused only through the normal full setup path, which runs the offline Audit and synthetic preflight again. Keep the previous runtime evidence if diagnosis is in progress. For an isolated installation, choose a new empty runtime folder. Do not remove an unrelated folder or reset paper data to make setup pass.
 
 ### Local Audit and its evidence limits
 

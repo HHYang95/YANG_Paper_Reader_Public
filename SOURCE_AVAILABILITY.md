@@ -1,11 +1,11 @@
 # Third-party source availability
 
-These source companions accompany release `0.1.2-public.1` in the [official repository's Releases](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases). Use the matching release page and the exact files below. The application installer does not need to download these sources to run the Reader. Recipients receive them under their upstream terms.
+These source companions accompany release `0.1.3` in the [official repository's Releases](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases). Use the matching release page and the exact files below. The application installer does not need to download these sources to run the Reader. Recipients receive them under their upstream terms.
 
 | Component | Source asset | SHA-256 |
 | --- | --- | --- |
-| Electron 44.4.5 FFmpeg/Opus source companion | [YANG_Paper_Reader-FFmpeg-source-electron-44.4.5-s02.zip](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.1.2-public.1/YANG_Paper_Reader-FFmpeg-source-electron-44.4.5-s02.zip) | `9d979a39fcd374322bb1f0932b283e02e9b74335e538255f6a765a510e594b86` |
-| Canvas 1.0.11 MPL source companion | [YANG_Paper_Reader-MPL-sources-canvas-1.0.11-s02.zip](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.1.2-public.1/YANG_Paper_Reader-MPL-sources-canvas-1.0.11-s02.zip) | `bed2eaf863b500c41e8c66f2339b9dad8610f08340ee04e974bc8c5b47b4b3d5` |
+| Electron 44.4.5 FFmpeg/Opus source companion | [YANG_Paper_Reader-FFmpeg-source-electron-44.4.5-s02.zip](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.1.3/YANG_Paper_Reader-FFmpeg-source-electron-44.4.5-s02.zip) | `9d979a39fcd374322bb1f0932b283e02e9b74335e538255f6a765a510e594b86` |
+| Canvas 1.0.11 MPL source companion | [YANG_Paper_Reader-MPL-sources-canvas-1.0.11-s02.zip](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.1.3/YANG_Paper_Reader-MPL-sources-canvas-1.0.11-s02.zip) | `bed2eaf863b500c41e8c66f2339b9dad8610f08340ee04e974bc8c5b47b4b3d5` |
 
 ## FFmpeg and Opus
 
@@ -23,6 +23,6 @@ Covered sources remain under MPL-2.0 sections 3.1-3.3; the larger application's 
 
 ## Independent installation source
 
-The complete source for the independent AGPL-3.0-or-later installation script is [install/Install-Reader.ps1 in the public repository](https://github.com/HHYang95/YANG_Paper_Reader_Public/blob/0.1.2-public.1/install/Install-Reader.ps1), with its [license](https://github.com/HHYang95/YANG_Paper_Reader_Public/blob/0.1.2-public.1/install/COPYING) and [scope](https://github.com/HHYang95/YANG_Paper_Reader_Public/blob/0.1.2-public.1/install/LICENSE-SCOPE.md). The protected application's main source is not included. Its small existing startup wrappers retain their separately stated application terms.
+The complete source for the independent AGPL-3.0-or-later installation script is [install/Install-Reader.ps1 in the public repository](https://github.com/HHYang95/YANG_Paper_Reader_Public/blob/0.1.3/install/Install-Reader.ps1), with its [license](https://github.com/HHYang95/YANG_Paper_Reader_Public/blob/0.1.3/install/COPYING) and [scope](https://github.com/HHYang95/YANG_Paper_Reader_Public/blob/0.1.3/install/LICENSE-SCOPE.md). The protected application's main source is not included. Its small existing startup wrappers retain their separately stated application terms.
 
 Original copyright, license and patent notices remain unchanged. The companions were prepared before publication; historical preparation wording inside them does not change the source contents or upstream rights. Actual public download access must accompany any distributed binary version.

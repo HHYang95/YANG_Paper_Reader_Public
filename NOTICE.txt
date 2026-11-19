@@ -7,7 +7,7 @@ INSTALL_GUIDE.md takes you through the installation.
 
 1. Release status and terms
 
-   This public-edition package is prepared for release 0.1.0-public.1.
+   This public-edition package is prepared for stable release 0.1.3.
    Consult the official repository and matching GitHub Release for actual
    availability. Preparation is not a clean-machine, GPU or live-AI trial.
    THIRD_PARTY_NOTICES.txt identifies component notices and source access.
@@ -91,10 +91,12 @@ INSTALL_GUIDE.md takes you through the installation.
    expected size and SHA-256 before installation. It sends no paper data
    and does not open the Reader or make an AI request.
 
-   The setup command of INSTALL_GUIDE.md downloads the Python packages from
-   files.pythonhosted.org and paddle-whl.cdn.bcebos.com, checks them against
-   pypi.org and www.paddlepaddle.org.cn, and downloads the two models from
-   huggingface.co. It sends nothing of your papers. The model downloads start
+   The setup command of INSTALL_GUIDE.md downloads the pinned Python packages
+   from files.pythonhosted.org and paddle-whl.cdn.bcebos.com and downloads the
+   two models from huggingface.co. Package hashes are checked locally against
+   the lock file. Audit compares the local installation report with the shipped
+   release catalog; Audit makes no network request. Setup sends nothing of
+   your papers. The model downloads start
    at huggingface.co and may be redirected to other download hosts that
    Hugging Face uses; these hosts were not measured on Hyeon-Ho Yang's PC.
    Each model request names the program to the server with the text
