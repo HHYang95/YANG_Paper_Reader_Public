@@ -7,9 +7,9 @@ INSTALL_GUIDE.md takes you through the installation.
 
 1. Release status and terms
 
-   This public-edition package is prepared for stable release 0.1.3.
+   This public-edition package is prepared for stable release 0.2.0.
    Consult the official repository and matching GitHub Release for actual
-   availability. Preparation is not a clean-machine, GPU or live-AI trial.
+   availability.
    THIRD_PARTY_NOTICES.txt identifies component notices and source access.
 
    LICENSE.txt contains the Public Edition Research and Education License.
@@ -22,8 +22,7 @@ INSTALL_GUIDE.md takes you through the installation.
    Official distribution repository:
    https://github.com/HHYang95/YANG_Paper_Reader_Public
 
-   The standalone packaging excludes the maintainer's private workspace
-   integration. The common reading functions are described in MANUAL.md.
+   The reading functions are described in MANUAL.md.
    Opening a new paper can send its content to your own AI account (item 2).
 
 
@@ -34,13 +33,32 @@ INSTALL_GUIDE.md takes you through the installation.
    account. Anthropic (for Claude Code) or OpenAI (for Codex) receives each
    request under your account's terms, and the use counts on your account.
    The Reader stores no sign-in details.
-   - When you open a PDF for the first time, the Reader prepares its Summary
-     by itself: it sends the text of every page, without page images. After
-     the full parsing, one more automatic request checks that Summary and
-     fills what it lacks: it sends the parsed text of every page together
-     with that Summary, and the image of each Figure that a note of the
-     Summary names (and of such a Table or Equation whose parsed text is
-     unclear).
+   - While Start the Paper Summary by itself is on in General Settings, as it
+     is at first, the Reader sends a Paper Summary request by itself for a PDF
+     for which no Paper Summary was tried and none exists: when you open it,
+     at its first open or a later one; when you turn the switch on while it is
+     open; and right after Reset sets aside its reading records that could not
+     be read. Each such request sends the text of every page, without page
+     images.
+   - While the switch is on, after the full parsing, the Reader sends by
+     itself one Summary Update request for the paper's newest Paper Summary,
+     once for each parsing, also where that Paper Summary was made with Make
+     Paper Summary before the full parsing. A Paper Summary made with Make
+     Paper Summary after the full parsing, which read the parsed text already,
+     is not updated for that parsing; one the Reader made by itself is updated
+     also where it was made after the full parsing. Turning the switch on can
+     start the Summary Update for the open paper as well. The Summary Update
+     checks that Paper Summary and fills what it lacks: it sends the parsed
+     text of every page together with that Paper Summary, and the image of
+     each Figure that a note of the Paper Summary names (and of such a Table
+     or Equation whose parsed text is unclear). Once a paper's Retry Paper
+     Summary (item 4) has been used, the Reader sends no Summary Update by
+     itself for that paper.
+   - With the switch off, the Reader sends neither by itself.
+   - Make Paper Summary, offered where no Paper Summary of the paper is
+     completed, queued or running, sends one Paper Summary request on each
+     press: the parsed text of every page after the full parsing, and
+     otherwise the text of every page, without page images in either case.
    - Translate sends the text you selected together with its image cut from
      the page. Ask on a selection sends your question and the text you
      selected: before the full parsing also its image and the paragraphs
@@ -65,7 +83,12 @@ INSTALL_GUIDE.md takes you through the installation.
      more request with more source from the same PDF, which can include
      whole pages of the PDF as images.
    - Auto Highlight sends the full parsed text of the paper for each pass.
-   - HTML Overview uses the locally parsed paper and makes no AI request.
+   - HTML Overview uses the locally parsed paper and the Paper Summary the
+     Reader has saved for it, which your AI wrote, and makes no AI request.
+     Saving it sends nothing; its folder holds the page, its data, images cut
+     from the paper's pages and a copy of KaTeX's style, fonts and license,
+     which draw the page's formulas, and the page loads nothing from the
+     internet.
    - When the Reader checks which program version is installed, it sends
      nothing.
 
@@ -75,6 +98,15 @@ INSTALL_GUIDE.md takes you through the installation.
    paper's DOI to Crossref (api.crossref.org). Where the first page and the
    PDF's details hold no DOI, it sends the one DOI printed on the last page
    instead, and without any DOI the title, the first author and the year.
+   After the full parsing, a paper with a title and no DOI whose PDF gives
+   neither its authors nor its year, and that Crossref did not match, is
+   looked up once more when the parse read an author and a year on its
+   first page: the Reader then sends Crossref the title with that first
+   author and that year. This also holds where the last page prints a DOI
+   that Crossref does not know or that belongs to another title, and for a
+   PDF whose only author in its details is a PC account name, such as
+   Admin, which counts as no author. This lookup is not made again once it
+   has an answer.
    Once Crossref matches the paper, the journal's name goes to
    lab.peptide.ink for the Impact Factor and quartile. No other text of the
    paper is sent.
@@ -83,27 +115,42 @@ INSTALL_GUIDE.md takes you through the installation.
    with the models you install. Nothing of the paper is sent for them.
 
    Links you click, in a PDF or in Paper Information, open in your web
+   browser. A click on the homepage in About, in the Information dialog,
+   opens its one fixed address, https://hhyang95.com, in your web
    browser.
 
-   The public installation script downloads the program from this
-   repository's GitHub Releases. GitHub may redirect asset downloads to
-   its download infrastructure. The script checks the selected file's
-   expected size and SHA-256 before installation. It sends no paper data
+   User Manual, in the Information dialog, and User Manual and Install
+   Guide, in the Start menu, open in your web browser MANUAL.html and
+   INSTALL_GUIDE.html, files installed with the Reader on your PC. They send
+   nothing, and a web address in those pages opens only when you click it.
+
+   You download the Setup from this repository's GitHub Releases, in your
+   web browser or with the two PowerShell lines of INSTALL_GUIDE.md, which
+   check its SHA-256 before they start it. GitHub may redirect asset
+   downloads to its download infrastructure. The Setup sends no paper data
    and does not open the Reader or make an AI request.
 
-   The setup command of INSTALL_GUIDE.md downloads the pinned Python packages
+   The Setup holds the program itself and downloads nothing. Its checks of
+   the requirements run on your PC and send nothing, and a link on its
+   Requirements page opens in your web browser only when you click it. The
+   runtime setup that it runs at its end downloads what the next paragraph
+   names.
+
+   The runtime setup, which the Setup runs at its end and Set Up Parsing
+   Runtime in the Start menu runs again, downloads the pinned Python packages
    from files.pythonhosted.org and paddle-whl.cdn.bcebos.com and downloads the
    two models from huggingface.co. Package hashes are checked locally against
    the lock file. Audit compares the local installation report with the shipped
-   release catalog; Audit makes no network request. Setup sends nothing of
-   your papers. The model downloads start
-   at huggingface.co and may be redirected to other download hosts that
-   Hugging Face uses; these hosts were not measured on Hyeon-Ho Yang's PC.
+   release catalog; Audit makes no network request. The runtime setup sends
+   nothing of your papers. The model downloads start at huggingface.co and
+   may be redirected to other download hosts that Hugging Face uses.
    Each model request names the program to the server with the text
    YANG-Reader-Model-Staging/1 (its User-Agent). The installers of Python,
    Claude Code and Codex that the guide names contact their own vendors.
 
-   The Reader sends nothing to Hyeon-Ho Yang.
+   The Reader sends nothing to Hyeon-Ho Yang. A click on the homepage makes
+   your web browser load that page from his site; the Reader gives the
+   browser that fixed address alone and nothing of yours.
 
 
 3. The wait for the page layout
@@ -121,7 +168,9 @@ INSTALL_GUIDE.md takes you through the installation.
    Open the failed paper's Summary to see the reason. If the Reader can
    confirm a runtime or sign-in failure, fix the installation or sign in,
    then choose Retry Paper Summary. This sends one new request to your
-   selected AI account. The earlier failure stays in your reading record.
+   selected AI account, with the parsed text of every page after the full
+   parsing and otherwise the text of every page, without page images. The
+   earlier failure stays in your reading record.
    The retry is available once per PDF. Closing, reopening or resetting the
    reading view keeps that limit. Older records with insufficient evidence
    show their recorded reason. A saved summary remains available to read.
@@ -131,23 +180,30 @@ INSTALL_GUIDE.md takes you through the installation.
 
    Reset, beside the Assistance & Notes title, deletes the paper's notes and
    highlights, its Explanation, Translate and other answers, its Auto
-   Highlight set and the places of its record boxes. It asks first (Reset
-   Reading Records, with Cancel as the default). It keeps the Whole Paper
+   Highlight set and the places of its answer boxes. It asks first (Reset
+   Reading Records, with Cancel as the default). It keeps the Paper
    Summary, the 5-Sentences Summary, the
    PDF, the parsed source and your reading position.
 
 
-6. The GPU and the AI runtime the Reader needs
+6. The PC, the GPU and the AI runtime the Reader needs
+
+   PC. Windows 10 version 1809 or later, or Windows 11, 64-bit (x64);
+   Python 3.12, 64-bit; 4 GB of RAM; about 12 GB of free disk
+   space for the program and the parsing runtime; and an internet
+   connection during setup and for AI requests.
 
    GPU. The full parsing runs only on the first NVIDIA GPU of the PC, with
-   CUDA. There is no fallback to the processor. The setup command checks
-   that the GPU supports bfloat16 (bf16) and stops when it does not. On
-   Hyeon-Ho Yang's PC (NVIDIA GeForce RTX 4090 with 24,564 MiB) the parser
-   held up to 9.3 GB of GPU memory on a 15-page paper. The minimum GPU,
-   driver and memory are not known. These historical figures are not a
-   minimum specification or a guarantee for another paper or machine.
+   CUDA. There is no fallback to the processor. The GPU needs compute
+   capability 8.0 or higher, which supports bfloat16 (bf16), and NVIDIA
+   driver 576.02 or newer. GPU memory of 12 GB or more is recommended: the
+   maintainers of PaddleOCR-VL, the parsing tool, name 12 GB in their pinned
+   FAQ as the smallest configuration they have run. The runtime setup checks
+   that the GPU supports bfloat16 (bf16) and stops when it does not. These
+   figures are minimums and a recommendation, not a guarantee for every
+   paper or PC.
 
-   AI runtime. Claude Code 2.1.302 or newer, or Codex 0.163.0 or newer,
+   AI runtime. Claude Code 2.1.330 or newer, or Codex 0.171.0 or newer,
    installed on your PC and signed in with your own account. The Reader looks
    in each program's installer folder, its npm global package and every
    folder of PATH, and AI Settings lists where it looked. Without one, the
@@ -163,21 +219,22 @@ INSTALL_GUIDE.md takes you through the installation.
    moved with a junction, a SUBST drive, a mapped network drive or a network
    path). Copy the PDF to a local folder and open the copy. It also refuses
    to save images, exported data or an HTML Overview into such a folder. Keep
-   the release folder and the runtime folder in ordinary local folders too.
+   the program folder and the runtime folder in ordinary local folders too.
 
 
 8. Windows startup restrictions
 
-   The current packaging process does not add a code signature. Windows may
-   warn about or block an unsigned program. The program has not been
-   qualified on your PC by preparing these documents. If policy blocks it,
-   keep the exact message and consult your administrator; do not disable
-   organizational protections as an installation step.
+   The Setup and the program carry no code signature. Windows may warn
+   about or block an unsigned program. Where it shows "Windows protected
+   your PC" for a Setup whose SHA-256 you have checked, choose More info,
+   then Run anyway. While Smart App Control is on, Windows blocks unsigned
+   programs, so the Setup and the Reader cannot run on that PC. If policy
+   blocks it, keep the exact message and consult your administrator; do not
+   disable organizational protections as an installation step.
 
 
 9. Standalone edition
 
-   Add to Wiki and private workspace handoff are not part of this edition.
-   PDF reading, local parsing, your AI account, notes and exports remain
-   subject to the behavior and disclosures above. This edition does not
-   need the maintainer's YANG repository or governance records.
+   This edition works on its own. PDF reading, local parsing, your AI
+   account, notes and exports remain subject to the behavior and
+   disclosures above.

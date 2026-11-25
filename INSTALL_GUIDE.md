@@ -1,175 +1,193 @@
 # Install YANG Paper Reader on Windows
 
-**Stable Windows release: 0.1.3.** The following instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.1.3). Confirm that its program asset is available before running the installer. These instructions are not a completed installation or hardware-compatibility result.
+**Stable Windows release: 0.2.0.** These instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.0) and its Setup, `YANG_Paper_Reader_Setup_0.2.0.exe`.
 
-## 1. Obtain the repository files
+## 1. Requirements
 
-Start at the [official YANG Paper Reader repository](https://github.com/HHYang95/YANG_Paper_Reader_Public). Use a repository revision whose `release.json` identifies version `0.1.3`.
+| Item | Minimum |
+| --- | --- |
+| Windows | Windows 10 version 1809 or later, or Windows 11; 64-bit, on an Intel or AMD (x64) processor |
+| Python | Python 3.12, 64-bit, from python.org |
+| GPU | An NVIDIA GPU of compute capability 8.0 or higher, which supports bfloat16 (bf16), such as the GeForce RTX 30, 40 or 50 series |
+| GPU driver | NVIDIA driver 576.02 or newer, the driver NVIDIA lists for CUDA 12.9 |
+| AI tool | Claude Code 2.1.330 or newer, or Codex 0.171.0 or newer, signed in with your own account |
+| Memory | 4 GB of RAM |
+| Disk | About 12 GB of free disk space for the program and the parsing runtime |
+| Network | An internet connection during setup and for AI requests |
 
-Git is not required. Choose **Code > Download ZIP**, extract the repository folder, and open PowerShell in the folder containing `release.json` and `install/`. Keep their relative locations intact. This ZIP contains repository documentation and installation files; the installer acquires and unpacks the program itself.
+- Parsing runs only on the first NVIDIA GPU (GPU 0); there is no CPU fallback.
+- You need no CUDA Toolkit: the runtime setup installs its own CUDA and cuDNN packages.
+- On the GeForce RTX 50 series, this release's parsing packages have not been confirmed.
+- The disk figure is the size of a completed installation; downloads and extraction need temporary space beyond it.
+- The other figures are minimums from the published requirements of Python, CUDA, cuDNN, PaddlePaddle, PaddleOCR-VL, Electron, Claude Code and Codex.
+- Recommended: 12 GB of GPU memory or more, the smallest that PaddleOCR-VL's maintainers report running in their [pinned FAQ](https://github.com/PaddlePaddle/PaddleOCR/issues/16823), and the newest driver.
 
-If you already use Git, you may clone the repository instead:
+## 2. Get what is missing
 
-```powershell
-git clone https://github.com/HHYang95/YANG_Paper_Reader_Public.git
-Set-Location -LiteralPath .\YANG_Paper_Reader_Public
-```
-
-Read the application [LICENSE](LICENSE), the installer's [AGPL text](install/COPYING) and [license scope](install/LICENSE-SCOPE.md). The small independent installer is readable under AGPL-3.0-or-later. Main application logic is compiled/obfuscated and its source remains private; the six readable Python startup wrappers and Windows command file retain the application's terms. Third-party terms retain precedence for their components.
-
-## 2. Check the machine and install external tools
-
-Use native 64-bit Windows 10 or 11 and Windows PowerShell 5.1 or PowerShell 7. Compatibility on every Windows build and machine has not been verified.
-
-| Component | What you do | Purpose |
-| --- | --- | --- |
-| Python 3.12, 64-bit | Install from Python's official sources if needed; keep it installed | Runs the Reader's backend and isolated Python environment |
-| NVIDIA GPU and driver | Check the GPU and install its driver from [NVIDIA](https://www.nvidia.com/en-us/drivers/) if needed | Local parsing with CUDA and bf16 |
-| Claude Code or Codex CLI | Install one native Windows command-line tool using the vendor instructions; sign in yourself | AI requests through your own account |
-| Reader, Electron, PDF.js and native canvas | Acquired by the Reader installer | Application, PDF display and page images |
-| Pinned Python packages and two model assets | Acquired by the Reader's runtime setup | Local parsing environment |
-
-The Reader installer does not require Git, Node, a compiler or external PowerShell modules. Nuitka and GCC/MinGW are maintainer build tools. Do not install a compiler to mask an unexplained backend-load failure. Follow any separate prerequisites of your chosen AI tool.
+The Setup does not install Python, the NVIDIA driver or your AI tool; get what is missing from the official sources below.
 
 ### Python
 
-The backend requires Python 3.12 x64. Python 3.12.10 is the historically tested installer, not the latest security release. Its [official release page](https://www.python.org/downloads/release/python-31210/) identifies newer releases and provides the Windows installer (64-bit). Read the current release information before choosing an installer. Another 3.12 patch is admitted by setup but is not thereby verified; do not replace or downgrade an existing installation automatically.
+The runtime setup accepts any 64-bit Python 3.12 release.
 
-After installation, open a new PowerShell window:
+1. Get the Windows installer (64-bit) from Python's [official release page](https://www.python.org/downloads/release/python-31210/).
+2. Install it without replacing or downgrading an existing Python automatically.
+3. Open a new PowerShell window and run:
 
 ```powershell
 py -3.12 --version
 py -3.12 -c "import struct; print(struct.calcsize('P') * 8)"
 ```
 
-Check for Python 3.12.x and `64`. If the launcher is missing, follow Python's installer guidance for the launcher. A different Python major/minor version or a 32-bit installation cannot satisfy this backend.
+4. Check for Python 3.12.x and `64`.
+
+- **Limit:** another major or minor Python version, or a 32-bit installation, cannot run the parsing.
 
 ### GPU and disk space
+
+Check the GPU and the free disk space.
+
+1. Install the GPU's driver from [NVIDIA](https://www.nvidia.com/en-us/drivers/) if needed.
+2. If your runtime folder will be on another drive, replace `C` in the second line below.
+3. Run these two lines in PowerShell:
 
 ```powershell
 nvidia-smi
 (Get-PSDrive C).Free / 1GB
 ```
 
-The parser uses GPU 0, the first NVIDIA GPU visible to its runtime. It requires CUDA and bfloat16 (bf16, the model's numerical format), with no CPU fallback. The driver and CUDA runtime packages are different: runtime setup supplies its selected CUDA/cuDNN packages; this guide does not require a separate CUDA Toolkit.
-
-On Hyeon-Ho Yang's PC, an RTX 4090 with 24,564 MiB held up to 9.3 GB of parsing GPU memory for one 15-page paper. Minimum GPU, driver and memory requirements are unknown. Rendering GPU use was not measured; these parser figures do not describe rendering or your external AI service.
-
-Use 12 GB free on the chosen runtime drive, plus the program and temporary download/extraction space, as an initial planning estimate with additional headroom. Historical environment/model sizes were 6.7 GB and 2.1 GB, with at least 2.8 GB of package downloads during setup. Replace `C` in the disk command if you choose another drive.
-
 ### Your AI tool and account
 
-Follow [Claude Code's native Windows setup](https://code.claude.com/docs/en/setup#install-on-native-windows) or [OpenAI's Codex CLI instructions](https://developers.openai.com/codex/cli/). Use the vendor's current installation procedure; inspect a downloaded installation script before choosing to execute it. A browser login or desktop application alone does not establish that the command-line tool is discoverable by the Reader.
+Install Claude Code or Codex, and sign in.
 
-The Reader admits Claude Code 2.1.302 or newer, or Codex 0.163.0 or newer. These are admission thresholds, not recommendations to install an old version or guarantees for every newer version. Check the tool you installed with `claude --version` or `codex --version`, then sign in yourself through its vendor flow. Version discovery is not authentication or an AI-request test. Never give an installation assistant passwords, tokens, authentication files or browser-session data.
+1. Follow the vendor's current procedure: [Claude Code's native Windows setup](https://code.claude.com/docs/en/setup#install-on-native-windows) or [OpenAI's Codex CLI instructions](https://developers.openai.com/codex/cli/).
+2. Check it with `claude --version` or `codex --version`.
+3. Sign in yourself through the vendor's flow.
 
-## 3. Inspect the installer and choose paths
+- A browser login or desktop application alone does not establish that the Reader finds the command-line tool.
+- **Limit:** with Claude Code older than 2.1.330 or Codex older than 0.171.0, AI Settings asks for an update; no AI request goes through it.
 
-From the repository folder:
+## 3. Install with the Setup
 
-```powershell
-Get-Content -LiteralPath .\release.json
-Get-Content -LiteralPath .\install\Install-Reader.ps1
-```
+The Setup installs the program for your Windows account and asks for no administrator rights. Take it and this guide only from the official repository and its release page.
 
-Check that the metadata names this repository and version `0.1.3`. The installer accepts the version-pinned GitHub Releases URL, verifies the full archive size and SHA-256 before extraction, and refuses unsafe archive paths. There is no fallback to a moving latest release. Metadata and script must come from the trusted official repository; a checksum does not independently establish that trust.
-
-Use short absolute paths on a local fixed drive. The program destination must not already exist and is limited to 80 characters; the runtime path is limited to 60 characters with no spaces. Paths containing traversal, reserved names or shell metacharacters are rejected. For example:
-
-- Program: `C:\Reader\0.1.3`, a new destination.
-- Runtime: `C:\Reader_Runtime`, separate from the program and with no spaces.
-
-Do not overlap these paths or place either inside the other. Avoid linked, synchronized or network folders. The installer refuses an occupied program destination and redirected ancestors. Existing runtime files are handled by the backend's ownership checks; neither the installer nor this guide deletes them automatically.
-
-### If Windows blocks the unsigned script
-
-The installer does not silently change execution policy. Inspect the exact official script first. If its downloaded-file mark blocks it, you may unblock only that inspected file:
+1. The Setup's SHA-256 is 1c9af33648092dfcee6ab5122bd27225780feab22bd673f7cb0b3a84874ea4a1. In PowerShell, run the two lines below; they download the Setup and start it only when its SHA-256 matches.
 
 ```powershell
-Unblock-File -LiteralPath .\install\Install-Reader.ps1
-Get-ExecutionPolicy -List
+Invoke-WebRequest -UseBasicParsing -Uri https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.2.0/YANG_Paper_Reader_Setup_0.2.0.exe -OutFile .\YANG_Paper_Reader_Setup_0.2.0.exe
+if ((Get-FileHash .\YANG_Paper_Reader_Setup_0.2.0.exe -Algorithm SHA256).Hash -eq '1c9af33648092dfcee6ab5122bd27225780feab22bd673f7cb0b3a84874ea4a1') { Start-Process .\YANG_Paper_Reader_Setup_0.2.0.exe } else { Write-Error 'The SHA-256 does not match. Do not run this file.' }
 ```
 
-Unblocking does not override `Restricted`, `AllSigned` or organizational policy. If no managed policy forbids it and you choose to allow the inspected local script for this invocation, the section 4 command may use `powershell -NoProfile -ExecutionPolicy RemoteSigned -File` in place of `powershell -NoProfile -File`. This affects that PowerShell process, not the machine/user setting. Group Policy still takes precedence. Stop and consult your administrator if policy requires a signed script; do not use a global policy change or `Bypass` as an installation step. See [Microsoft's execution-policy guidance](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-5.1).
+2. If Windows shows "Windows protected your PC" for a Setup whose SHA-256 matched, choose **More info**, then **Run anyway**.
+3. On **License Agreement**, read the license.
+4. Go on from **Select Destination Location**, which shows the program folder; an update skips this page.
+5. On **Parsing Runtime Folder**, choose a new or empty folder, or an earlier installation's runtime folder, whose runtime is not downloaded again.
+6. On **Requirements**, read its checks; none stops the installation, and a missing tool shows its official link.
+7. Keep or change the box **Set up the parsing runtime at the end of Setup**, checked at first when Python and the GPU pass.
+8. On **Ready to Install**, check the runtime folder and whether the runtime setup runs.
+9. With the box checked, wait while the runtime setup downloads packages and models; this can take a long time.
+10. On the last page, read whether the parsing runtime is ready.
+11. Start the Reader as section 4 says.
 
-## 4. Install the program and runtime
+- The first time, **Parsing Runtime Folder** proposes `C:\YANG_Paper_Reader_Runtime`, or `C:\Reader_Runtime` when it finds an earlier version's runtime there.
+- With the box unchecked, **Set Up Parsing Runtime** in the Start menu sets the runtime up later.
+- **Limit:** the runtime folder lies on a local fixed drive, apart from the program folder, with at most 60 characters and no spaces.
+- **Limit:** it may not be a linked, synchronized or network folder, or hold files the runtime setup did not make.
+- **Limit:** the Setup and the program are not code-signed; while Smart App Control is on, Windows blocks them and allows no exception.
+- **If it stops:** when the parsing runtime is not ready, follow section 5.
 
-Close any running Reader and save your work. From the repository folder:
+A matching SHA-256 shows that the file is the one this guide names, not that its source can be trusted. The Setup is built with Inno Setup, whose site is [jrsoftware.org](https://jrsoftware.org/).
 
-```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -RuntimePath C:\Reader_Runtime
-```
+The Setup's script, `install/YANG_Paper_Reader.iss`, is readable under AGPL-3.0-or-later, with its [AGPL text](install/COPYING) and [license scope](install/LICENSE-SCOPE.md); the application has its own [LICENSE](LICENSE).
 
-The installer downloads the pinned program archive, checks its size and SHA-256, extracts it into an owned staging folder, checks the required executable/setup files, and places it without overwriting an installation. It then invokes `resources\backend\setup_runtime.cmd` with your runtime path. It does not open the Reader, sign in or change system Python/drivers.
+## 4. Start the Reader for the first time
 
-If the program download stops before placement, restore the connection and run the same installer command with the same program path. Keep the partial download beside that path. When the server supports resuming, the installer requests the remaining bytes. If the server requires a fresh transfer, the installer downloads the whole archive. The console reports received bytes and progress. Extraction starts after the entire archive matches the published size and SHA-256.
+Check the Reader once before the first paper.
 
-Runtime setup installs 111 pinned Python packages, downloads and verifies two model assets, runs a fresh synthetic GPU preflight, and writes the program's runtime profile. On retry, setup checks each cached package against its release SHA-256 digest, reuses verified files, and downloads incomplete or damaged packages again. The console reports transfer and verification progress. Its `Runtime ready.` result means the setup's artifact and synthetic-operator checks passed; it does not verify a paper or an AI request. Historical package/model/check work took 26.5 minutes on one PC, not a promised duration.
+1. Start **YANG Paper Reader** from the Start menu.
+2. Read the installed `LICENSE.txt`, `NOTICE.txt` and `THIRD_PARTY_NOTICES.txt` in the program folder.
+3. Do not open a paper at this first start.
+4. Check **Ready to Read** and **AI Settings**.
+5. If AI Settings shows your AI tool as **Unavailable**, open **Where the Reader Looked** there and follow the vendor's guidance.
 
-A setup error is returned as a nonzero installer exit. Keep the failed stage, error and logs. The placed program remains available for diagnosis and setup retry. Do not rerun the installer into that occupied program folder; use section 5.
+- From the Start menu, **User Manual** and **Install Guide** open the installed manual and this guide in your web browser, offline.
+- In the Reader's Information dialog, **User Manual** opens the manual too.
+- **If it stops:** if Windows warns about or blocks the Reader, keep the exact message and respect organizational protections.
 
-## 5. DownloadOnly, setup retry and failures
+### Before you open a paper
 
-To acquire, verify and place the program without executing runtime setup:
+Decide what opening a paper may send.
 
-```powershell
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -DownloadOnly
-```
+1. Choose a paper you may transmit, and accept the account usage before you open it.
+2. To send neither summary by itself, turn off **Start the Paper Summary by itself** in **General Settings** before you open a paper.
+3. Read section 1 of the [manual](MANUAL.md).
 
-`RuntimePath` may be omitted in this mode. No packages/models are installed, no GPU check runs and the application is not launched.
+- **Sent:** opening a new PDF, with the switch on as at first, can send every page's text for a Paper Summary.
+- **Sent:** then parsed text and selected source images for a Summary Update, both through your own AI account.
+- **Sent:** bibliographic details go to public lookup services.
 
-After completing prerequisites, finish setup from the placed program, or retry it after correcting a runtime-setup failure:
+## 5. If the runtime setup fails
 
-```powershell
-& 'C:\Reader\0.1.3\resources\backend\setup_runtime.cmd' 'C:\Reader_Runtime'
-```
+The runtime setup installs 111 pinned Python packages, downloads and verifies two models, and checks the GPU.
 
-Every full setup runs a fresh synthetic check, including after a driver, GPU or Reader change. The 180-second preflight process limit is a safety limit, not a minimum-GPU benchmark. The advanced `--profile-only` mode does not recheck current compatibility.
+1. Keep the failed step, the error and the logs, and fix the cause as the table below says.
+2. Run **Set Up Parsing Runtime** from the Start menu, or run the Setup again, which also lets you choose another runtime folder.
 
-| Failed stage or observation | Next action |
+| What failed | What to do |
 | --- | --- |
-| Program download interrupted before placement | Restore connectivity and rerun the same installer command. The console shows whether the transfer resumes or starts again. |
-| Release not published or download missing | Check the pinned version and its official GitHub release. |
-| Archive size/hash mismatch or unsafe entry | Stop. Keep the metadata and error for diagnosis; do not disable verification or extract the rejected archive manually. |
-| Program destination occupied or paths rejected | Choose a new ordinary local destination and separate runtime path. Preserve existing files. |
-| Runtime folder contains unowned files | Choose a new empty runtime folder. Do not clear an unrelated folder to pass the check. |
-| Package or model failure | Read `C:\Reader_Runtime\logs\packages.log` or `models.log` for the actual network, hash, permission or space error. Keep package pins/model revisions. |
-| GPU, import/DLL, numerical or timeout failure | Read `logs\preflight.log` and, if present, `preflight.pending.json` under the runtime folder. A pending report is diagnostic, not accepted readiness. Distinguish hardware, driver, package and load errors before retrying. |
+| Python 3.12 was not found | Install Python 3.12, 64-bit (section 2). |
+| The runtime folder holds files that the runtime setup did not make | Run the Setup again with a new or empty runtime folder; do not clear an unrelated folder. |
+| Package or model failure | Read `logs\packages.log` or `logs\models.log`; keep package pins and model revisions. |
+| GPU, import/DLL, numerical or timeout failure | Read `logs\preflight.log` and any `preflight.pending.json`, which does not mean the check passed. |
+| Audit failure | Read The audit step below. |
 
-A failed fresh check does not reuse an earlier successful preflight. Do not infer unsupported hardware from an unexplained failure, change precision, add CPU fallback or install arbitrary replacements. To change the runtime location, keep the old folder and run full setup with a new empty one.
+- The logs are in the runtime folder.
+- The runtime setup ends with `Runtime ready.` when its checks passed; that verifies no paper or AI request.
+- A retry reuses verified downloads and downloads incomplete or damaged packages again.
+- **Limit:** the GPU check stops the runtime setup when the GPU cannot run the parser; an earlier pass does not count.
+- **Limit:** the GPU check stops after 180 seconds.
 
-## 6. Start the Reader yourself
+### The audit step
 
-Only after successful runtime setup:
+The audit step checks the installed packages against the pinned lock and the package list shipped with the Reader.
 
-```powershell
-& 'C:\Reader\0.1.3\YANG Paper Reader.exe'
-```
+1. When the audit fails, keep `artifact-audit.pending.json` and `logs\audit.log` from the runtime folder.
+2. Report the exact error.
 
-Read the installed `LICENSE.txt`, `NOTICE.txt` and `THIRD_PARTY_NOTICES.txt`. The application is unsigned; Windows may warn or block it. Keep the exact message and respect organizational protections.
+- **Sent:** the audit makes no external request; the package and model downloads are separate network stages.
 
-Do not open a paper during this startup check. If the Reader restores a recent paper or starts work, close it through any confirmation and report what happened. Check Ready to Read and AI Settings. If your runtime is unavailable, use **Where the Reader Looked** and the vendor's setup guidance. The installer itself never performs this launch.
+## 6. Update with a new Setup
 
-## 7. Choose a paper trial separately
+A new version's Setup installs over the earlier one.
 
-Opening a new PDF can automatically send every page's text for a Summary, then parsed text and selected source images for an update, through your own AI account. Bibliographic details also go to public lookup services. Choose a paper you may transmit and accept the account usage before opening it; read [MANUAL.md](MANUAL.md), section 1.
+1. Close the Reader.
+2. Run the Setup of the new version.
 
-A synthetic check or successful startup does not establish paper accuracy, account access, an AI result or broad hardware compatibility.
+- It installs into the same program folder and proposes the runtime folder you chose before.
+- With its box checked, the runtime setup runs again, reusing what is still valid.
+- Your notes, answers, settings and parsing data stay in `%APPDATA%\YANG Paper Reader`.
 
-## 8. Upgrade or remove
+If you installed an earlier version with the PowerShell installer:
 
-For an upgrade, obtain the official repository files/metadata for the new published version and choose a new version-specific program directory. Close the old Reader. A compatible previously owned runtime folder may reuse valid downloads, but full setup checks it again. Use a new runtime directory if you need to preserve the old runtime unchanged. Keep old program/data folders until you decide they are no longer needed.
+1. Close that Reader.
+2. Install 0.2.0 with the Setup, and give **Parsing Runtime Folder** the runtime folder you already downloaded.
+3. Delete the old program folder yourself.
 
-The installer does not delete old versions or user data. The program directory, runtime directory, and `%APPDATA%\YANG Paper Reader` user records are separate. The latter includes notes, answers, parsing data and any study guides saved by older versions. Back up records before choosing any removal; exported HTML Overviews remain where you saved them. Verify each exact folder and whether another release uses it before removing anything. Python and your AI tool are separate installations.
+## 7. Uninstall
 
-Report what was actually installed, exact versions, the failed stage/exit result and log locations. Review logs for paper content and personal paths before sharing them through the official repository. No clean-machine installation, compiler-free backend load on another PC, or live AI trial is established by these instructions.
+Uninstalling removes the program, not your data.
 
-### Updating an existing installation
+1. Uninstall **YANG Paper Reader** from the list of installed apps in Windows Settings.
+2. To remove your data and the runtime too, keep copies of the records you want, then delete both folders yourself.
 
-Keep the previous program folder and obtain the repository files for 0.1.3. Use a new program destination such as `C:\Reader\0.1.3`; the installer refuses an occupied program destination. Close the Reader before setup. The existing Reader-owned runtime folder may be reused only through the normal full setup path, which runs the offline Audit and synthetic preflight again. Keep the previous runtime evidence if diagnosis is in progress. For an isolated installation, choose a new empty runtime folder. Do not remove an unrelated folder or reset paper data to make setup pass.
+- It removes the program folder, its Start-menu entries and its entry in that list.
+- It leaves `%APPDATA%\YANG Paper Reader`, which holds your data, and the runtime folder.
+- It leaves Python, the NVIDIA driver, your AI tool and the HTML Overviews you saved.
+- It leaves in `%TEMP%` each Setup run's log and a folder of about 7 MB ending in `-uninstall.tmp`, which you can delete.
 
-### Local Audit and its evidence limits
+## 8. Report a problem
 
-The setup Audit compares the local pip installation report against the pinned lock and `resources/backend/release-audit-catalog.json`. It rejects missing, extra or differing package identities, URLs and SHA-256 values. It makes no external request. Program, package and model acquisition are separate network stages; offline Audit does not mean the whole installation is offline.
+1. Review the logs for paper content and personal paths before you share them.
+2. Report through the official repository what was installed, the exact versions, the failed step and the log locations.
 
-The catalog records its verification date in `verified_utc`; it captures release-preparation status, not current withdrawal status or a vulnerability scan. PaddlePaddle uses official index-entry evidence and the locked acquired-wheel hash because its index does not provide the PyPI withdrawal field or a full wheel hash. Preserve `artifact-audit.pending.json` and `logs/audit.log` when Audit fails, and report the exact error. Do not disable antivirus, bypass Audit, replace package pins or invent an alternative download source.
+- These instructions do not establish that the Reader installs and runs on every PC or that an AI request succeeds.

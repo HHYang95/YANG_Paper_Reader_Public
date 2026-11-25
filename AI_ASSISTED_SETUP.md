@@ -1,47 +1,42 @@
 # Install with help from your Claude or Codex
 
-**Stable Windows release: 0.1.3.** Start from the [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Public) and its matching release. Verify actual download availability and each installation result; do not infer them from the existence of these instructions.
+**Stable Windows release: 0.2.0.** Start from the [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Public) and its matching release. Verify actual download availability and each installation result; do not infer them from the existence of these instructions.
 
-Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. The Reader's small public installer downloads and verifies the compiled/obfuscated program, places it, then runs its pinned runtime setup. The main source remains private. Small readable startup files in the application retain the application's terms; the independent public installer alone uses AGPL-3.0-or-later. Python, the NVIDIA driver and your AI command-line tool are separate choices using official vendor instructions; account sign-in remains yours.
+Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. You install the Reader with its Setup, `YANG_Paper_Reader_Setup_0.2.0.exe`, which holds the compiled and obfuscated program, installs it and runs its pinned runtime setup at its end. Your AI can help you check the requirements, download the Setup and check its SHA-256 with the guide's two lines, and read the logs after a failure; you go through the Setup's pages, sign in and start the Reader yourself. The main source remains private. Small readable startup files in the application retain the application's terms; the Setup's script alone uses AGPL-3.0-or-later. Python, the NVIDIA driver and your AI command-line tool are separate installations from official vendor instructions; account sign-in remains yours.
 
 ## Checklist
 
-1. Confirm the official release is published and that the repository's script and `release.json` describe the intended version. Git is optional: **Code > Download ZIP** supplies repository files, not a manual program handoff.
-2. Inspect the script and metadata. Choose a new short local program directory and a separate runtime directory. Preserve existing installations and records; do not use linked/network paths or overlapping destinations.
-3. Check native Windows 64-bit, Python 3.12 x64, NVIDIA GPU/driver visibility and disk space. Use the guide's official Python, NVIDIA, Claude Code and Codex links. Do not silently replace Python, install a compiler or disable a security policy.
-4. Choose normal installation or `-DownloadOnly`. Normal mode runs pinned runtime setup and a fresh synthetic preflight. DownloadOnly only verifies and places the program; it performs no runtime setup or application launch.
-5. If the program download stops, restore the connection and run the same installer command with the original program path to recover the transfer. If runtime setup fails after program placement, keep the placed program, read the stage and logs, and retry its setup command as described in the installation guide.
-6. Sign in yourself through the AI vendor. The assistant may check version/discovery, but must not collect credentials, tokens, authentication files or browser-session data.
-7. You manually launch the Reader after successful setup. Check Ready to Read and AI Settings without opening a paper, then stop. An unexpected restored paper or processing is a reason to close and report it. Choose any paper or AI trial separately.
-8. Record observed versions, paths, results, logs and unknowns. A plan, old measurement, version string or synthetic check is not proof of a successful clean-machine installation or AI request.
+1. Confirm that the official release 0.2.0 is published and that its page holds `YANG_Paper_Reader_Setup_0.2.0.exe`.
+2. Check native Windows 64-bit, Python 3.12 x64, NVIDIA GPU and driver visibility, Claude Code or Codex and disk space against the guide's requirements. Use the guide's official Python, NVIDIA, Claude Code and Codex links. Do not silently replace Python, install a compiler or disable a security policy.
+3. Download the Setup with the first of the guide's two PowerShell lines and check its SHA-256 with the second, which starts the Setup only when the SHA-256 matches. Run no installer silently and no remote script.
+4. Go through the Setup's pages yourself: the program folder, a new or empty runtime folder or the runtime folder of an earlier installation, and the Requirements page with its box Set up the parsing runtime at the end of Setup. With that box checked, the runtime setup runs at the end of the Setup and ends with a GPU check.
+5. If the runtime setup fails, the program stays installed. Read the lines the Setup's last page shows, the `logs` folder in the runtime folder and the log of the Setup that the page names, and resolve the cause; then run Set Up Parsing Runtime from the Start menu, or run the Setup again. Do not delete runtime data automatically.
+6. Sign in yourself through the AI vendor. The assistant may check version and discovery, but must not collect credentials, tokens, authentication files or browser-session data.
+7. You start the Reader from the Start menu after successful setup. Check Ready to Read and AI Settings without opening a paper, then stop. An unexpected restored paper or processing is a reason to close it and report it as a problem in the official repository. Open a paper or make an AI request only later, as a separate choice.
+8. Record observed versions, paths, results, logs and unknowns. A plan, an old measurement, a version string or a passed setup check does not prove that the installation works on this PC or that an AI request succeeds.
 
 ## Copyable prompt
 
 ```text
 Help me install YANG Paper Reader from https://github.com/HHYang95/YANG_Paper_Reader_Public using README.md, INSTALL_GUIDE.md and AI_ASSISTED_SETUP.md.
 
-First check the public release status. The target is 0.1.3; do not claim it is available merely because the files describe it. Read the official script, release.json and license scope. Do not build the private application source or invent download URLs. Git is optional for obtaining the repository files.
+First check the public release status. The target is 0.2.0; do not claim it is available merely because the files describe it. The Reader installs with its Setup, YANG_Paper_Reader_Setup_0.2.0.exe, from the release page. Do not build the private application source or invent download URLs.
 
-Explain the exact changes before running installation commands. Keep the protected application and its minimal readable startup files under their application terms, separate from the independent AGPL-3.0-or-later installer. Preserve third-party rights and supplied notices.
+Explain each command before you run it. Keep the protected application and its minimal readable startup files under their application terms, separate from the Setup's script under AGPL-3.0-or-later. Preserve third-party rights and supplied notices.
 
-Check native Windows 64-bit, Python 3.12 x64 and NVIDIA GPU/driver visibility. Record the exact Python patch; 3.12.10 is historical test evidence, not the latest security release. Use official current vendor instructions for missing external tools, without automatically replacing an existing Python, installing unrelated build tools or signing into my AI account.
+Check my PC against the requirements in INSTALL_GUIDE.md: Windows, Python 3.12 x64, the NVIDIA GPU and its driver, Claude Code or Codex, and disk space. Record the exact Python version. Use official current vendor instructions for missing external tools, without automatically replacing an existing Python, installing unrelated build tools or signing into my AI account.
 
-Explain that local parsing uses GPU 0 and bf16 with no CPU fallback. Historical VRAM figures are not minimum-hardware guarantees. Rendering and my external AI service are separate from local parsing.
+Explain that local parsing uses GPU 0 and bf16 with no CPU fallback, and that the GPU memory the guide recommends is a recommendation, not a guarantee. Rendering and my external AI service are separate from local parsing.
 
-Choose a new short local InstallPath and a separate RuntimePath with me. From the repository folder, the normal command is:
-powershell -NoProfile -File .\install\Install-Reader.ps1 -InstallPath C:\Reader\0.1.3 -RuntimePath C:\Reader_Runtime
+Download the Setup and check its SHA-256 with the guide's two PowerShell lines, which start the Setup only when the SHA-256 matches. Run no installer silently and no remote script. I go through the Setup's pages myself.
 
-If I choose acquisition/placement only, use -DownloadOnly and omit RuntimePath. This is not completed runtime setup. Follow the guide's unsigned-script instructions without globally changing execution policy or overriding organization policy.
+If the runtime setup fails, read with me the lines the Setup's last page shows, the logs folder in the runtime folder and the log of the Setup that the page names. Help me resolve the cause; then I run Set Up Parsing Runtime from the Start menu, or the Setup again. Do not delete runtime data automatically, alter verification, skip the GPU check, add CPU fallback or change precision to suppress a failure.
 
-Preserve full archive hash/size checks, safe extraction, package pins and model revisions. Do not substitute a latest release, alter verification, add CPU fallback or change precision to suppress a failure. Full runtime setup must run a fresh synthetic preflight; --profile-only is not a current compatibility check.
+Leave sign-in and starting the Reader to me. Do not open a paper or start a Reader AI request as an installation check. Explain automatic Paper Summary requests and public metadata lookup before I open my first paper.
 
-If runtime setup fails, preserve the placed program and read the stage, error and named logs. Retry its resources\backend\setup_runtime.cmd only after resolving the cause; do not reinstall into the occupied InstallPath or delete runtime data automatically.
-
-Leave sign-in and the final Reader launch to me. Do not open a paper or start a Reader AI request as an installation check. Explain automatic Summary requests and public metadata lookup before any separately chosen paper trial.
-
-Finish with exactly what changed, checks actually run, results, log paths and remaining limits. Do not claim GPU, AI, clean-machine or broad compatibility success from old evidence or synthetic tests.
+Finish with exactly what changed, checks actually run, results, log paths and remaining limits. Do not claim that the GPU, AI requests or other PCs work from old results or setup checks.
 ```
 
-## Patch installation checks
+## Update checks
 
-For 0.1.3, follow the installation guide's update instructions. Preserve the previous program and diagnostic evidence. Audit uses the shipped release catalog locally; downloads of the program, packages and models remain separate network operations. Read `artifact-audit.pending.json` and `logs/audit.log` for an Audit failure. Do not disable antivirus or bypass hash checks. A completed setup does not establish the tester's parsing or Summary result.
+To update, follow the installation guide's update instructions: close the Reader and run the new version's Setup over the earlier one. Preserve the logs of the earlier setup. The audit step of the runtime setup compares the installed packages with the package list shipped with the Reader, on this PC; downloads of the Setup, packages and models remain separate network operations. Read `artifact-audit.pending.json` and `logs\audit.log` in the runtime folder for an audit failure. Do not disable antivirus or bypass hash checks. A completed setup does not establish your parsing or Paper Summary result.

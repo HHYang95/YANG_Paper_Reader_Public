@@ -41,9 +41,10 @@ Bundled components
 
 Independent installation script
 
-install/Install-Reader.ps1 is AGPL-3.0-or-later, with complete source and
-license in the public repository. It is separate from the protected Reader
-application and its small startup wrappers. See install/LICENSE-SCOPE.md.
+install/YANG_Paper_Reader.iss, the Setup's script, is AGPL-3.0-or-later, with
+complete source and license in the public repository. It is separate from the
+protected Reader application and its small startup wrappers. See
+install/LICENSE-SCOPE.md.
 
 Separately acquired components
 

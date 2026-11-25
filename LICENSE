@@ -23,12 +23,13 @@ not replace a separately supplied tester license or withdraw rights already
 granted under another license. A separate express license on a particular
 component governs that component instead.
 
-The independent installation script install/Install-Reader.ps1 is expressly
-excluded from this license. It is provided as source under the GNU Affero
-General Public License, version 3 or (at your option) any later version;
-see install/COPYING and install/LICENSE-SCOPE.md. The restrictions below
-do not limit rights granted for that installation script. This exception
-does not relicense the separately downloaded Reader application.
+The independent installation script install/YANG_Paper_Reader.iss, the
+Setup's script, is expressly excluded from this license. It is provided as
+source under the GNU Affero General Public License, version 3 or (at your
+option) any later version; see install/COPYING and install/LICENSE-SCOPE.md.
+The restrictions below do not limit rights granted for that installation
+script. This exception does not relicense the separately downloaded Reader
+application.
 
 2. Free research and educational use
 
