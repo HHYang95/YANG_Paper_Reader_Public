@@ -1,6 +1,6 @@
 # YANG Paper Reader: Standalone Manual
 
-**Stable Windows release: 0.2.0.** This manual describes the standalone program.
+**Stable Windows release: 0.2.1.** This manual describes the standalone program.
 
 - Start with [README.md](README.md) and [INSTALL_GUIDE.md](INSTALL_GUIDE.md) in the official public repository.
 - Every AI request runs on your own account, through the Claude Code or Codex program you signed in to, and counts on that account.

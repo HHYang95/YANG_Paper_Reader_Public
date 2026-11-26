@@ -18,7 +18,7 @@
   #define AppTitle "YANG Paper Reader"
 #endif
 #ifndef AppVersion
-  #define AppVersion "0.2.0"
+  #define AppVersion "0.2.1"
 #endif
 #ifndef ProductDir
   #error Define ProductDir: the folder of the program to install.

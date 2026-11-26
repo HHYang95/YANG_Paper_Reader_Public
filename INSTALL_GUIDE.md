@@ -1,6 +1,6 @@
 # Install YANG Paper Reader on Windows
 
-**Stable Windows release: 0.2.0.** These instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.0) and its Setup, `YANG_Paper_Reader_Setup_0.2.0.exe`.
+**Stable Windows release: 0.2.1.** These instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.1) and its Setup, `YANG_Paper_Reader_Setup_0.2.1.exe`.
 
 ## 1. Requirements
 
@@ -71,11 +71,11 @@ Install Claude Code or Codex, and sign in.
 
 The Setup installs the program for your Windows account and asks for no administrator rights. Take it and this guide only from the official repository and its release page.
 
-1. The Setup's SHA-256 is 1c9af33648092dfcee6ab5122bd27225780feab22bd673f7cb0b3a84874ea4a1. In PowerShell, run the two lines below; they download the Setup and start it only when its SHA-256 matches.
+1. The Setup's SHA-256 is 02677ad7e676b5c1ae89fbc9cd974bffca06b6b31f6b1eb050f1ffcbf0bafe3e. In PowerShell, run the two lines below; they download the Setup and start it only when its SHA-256 matches.
 
 ```powershell
-Invoke-WebRequest -UseBasicParsing -Uri https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.2.0/YANG_Paper_Reader_Setup_0.2.0.exe -OutFile .\YANG_Paper_Reader_Setup_0.2.0.exe
-if ((Get-FileHash .\YANG_Paper_Reader_Setup_0.2.0.exe -Algorithm SHA256).Hash -eq '1c9af33648092dfcee6ab5122bd27225780feab22bd673f7cb0b3a84874ea4a1') { Start-Process .\YANG_Paper_Reader_Setup_0.2.0.exe } else { Write-Error 'The SHA-256 does not match. Do not run this file.' }
+Invoke-WebRequest -UseBasicParsing -Uri https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.2.1/YANG_Paper_Reader_Setup_0.2.1.exe -OutFile .\YANG_Paper_Reader_Setup_0.2.1.exe
+if ((Get-FileHash .\YANG_Paper_Reader_Setup_0.2.1.exe -Algorithm SHA256).Hash -eq '02677ad7e676b5c1ae89fbc9cd974bffca06b6b31f6b1eb050f1ffcbf0bafe3e') { Start-Process .\YANG_Paper_Reader_Setup_0.2.1.exe } else { Write-Error 'The SHA-256 does not match. Do not run this file.' }
 ```
 
 2. If Windows shows "Windows protected your PC" for a Setup whose SHA-256 matched, choose **More info**, then **Run anyway**.
@@ -170,7 +170,7 @@ A new version's Setup installs over the earlier one.
 If you installed an earlier version with the PowerShell installer:
 
 1. Close that Reader.
-2. Install 0.2.0 with the Setup, and give **Parsing Runtime Folder** the runtime folder you already downloaded.
+2. Install 0.2.1 with the Setup, and give **Parsing Runtime Folder** the runtime folder you already downloaded.
 3. Delete the old program folder yourself.
 
 ## 7. Uninstall

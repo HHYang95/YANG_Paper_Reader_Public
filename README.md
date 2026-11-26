@@ -4,7 +4,7 @@ YANG Paper Reader is a standalone Windows application for reading research PDFs,
 
 Watch the 2:30 introduction on YouTube: [YANG Paper Reader](https://www.youtube.com/watch?v=LzsCjgvVZKQ).
 
-**Stable Windows release: 0.2.0.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.0) and the installation instructions below. Confirm that the release contains its assets before you install. These instructions do not establish successful installation or hardware compatibility on your PC.
+**Stable Windows release: 0.2.1.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.1) and the installation instructions below. Confirm that the release contains its assets before you install. These instructions do not establish successful installation or hardware compatibility on your PC.
 
 ## Start here
 
@@ -12,7 +12,7 @@ Use this [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Pub
 
 Read the [installation guide](INSTALL_GUIDE.md) and the requirements below. You install the Reader with its Setup.
 
-Download `YANG_Paper_Reader_Setup_0.2.0.exe` from the [0.2.0 release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.0). Its SHA-256 is 1c9af33648092dfcee6ab5122bd27225780feab22bd673f7cb0b3a84874ea4a1; check it before you run the file, as the two PowerShell lines of the installation guide do. The Setup installs the program for your Windows account without administrator rights. It checks Python, the NVIDIA GPU and its driver, Claude Code or Codex and the free disk space, with a link for a missing tool, and runs the parsing runtime setup at its end. Then start the Reader from the Start menu. The Setup and the program are not code-signed: Windows may ask you to choose More info, then Run anyway, and while Smart App Control is on they cannot run.
+Download `YANG_Paper_Reader_Setup_0.2.1.exe` from the [0.2.1 release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.1). Its SHA-256 is 02677ad7e676b5c1ae89fbc9cd974bffca06b6b31f6b1eb050f1ffcbf0bafe3e; check it before you run the file, as the two PowerShell lines of the installation guide do. The Setup installs the program for your Windows account without administrator rights. It checks Python, the NVIDIA GPU and its driver, Claude Code or Codex and the free disk space, with a link for a missing tool, and runs the parsing runtime setup at its end. Then start the Reader from the Start menu. The Setup and the program are not code-signed: Windows may ask you to choose More info, then Run anyway, and while Smart App Control is on they cannot run.
 
 Install Python 3.12 (64-bit), the NVIDIA driver and your AI command-line tool separately, from their official instructions; the Setup does not install them, sign in or start the Reader. The installed program also holds the manual and the installation guide as pages that open in your web browser without an internet connection: User Manual and Install Guide in the Start menu open them, and User Manual in the Reader's Information dialog opens the manual.
 
@@ -114,3 +114,10 @@ Versions 0.1.4 and 0.1.5 were not published, so this list names everything that 
 - The left panel is 320 px wide. Assistance & Notes opens at 450 px and can be dragged from 300 to 1000 px where the window has room; the PDF view takes the rest. An empty tab of Assistance & Notes says how its first record is made, and while the page layout is prepared, an empty Contents reads "Contents appear as the page layout is prepared." A number typed in the page box that is no page of the paper puts the current page back in the box, and Reset Reading Records says in two sentences what it deletes and what stays.
 
 Existing notes and answers open in the new window unchanged, and their Sources lists are made from what each record saved. 0.2.0 keeps new files and keys in the Reader's own data in `%APPDATA%\YANG Paper Reader`, among them the text size, the switch Start the Paper Summary by itself, the Default Highlight Color, a highlight colored purple and the kept Citation Format, and an earlier Reader may refuse settings, library data or reading records that 0.2.0 has written. This stable release does not replace your own check of the installation and of a result on your own paper. Preserve existing original PDFs, reading records and prior exports when upgrading.
+
+## Changes in 0.2.1
+
+- Figure recognition can keep two opposing callout boxes and their text with the illustration their pointers identify. Ambiguous neighboring content is left separate.
+- A heading inside an accepted callout stays with the figure; genuine article headings retain their section action. The extended figure is kept when saved recognition is reopened.
+
+Check the detected figure and its sources against your paper. These changes do not establish figure-recognition accuracy for every document.
