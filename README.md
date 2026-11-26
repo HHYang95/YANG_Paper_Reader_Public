@@ -2,6 +2,8 @@
 
 YANG Paper Reader is a standalone Windows application for reading research PDFs, local parsing, notes, and assistance through your own Claude Code or Codex account.
 
+Watch the 2:30 introduction on YouTube: [YANG Paper Reader](https://www.youtube.com/watch?v=LzsCjgvVZKQ).
+
 **Stable Windows release: 0.2.0.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.0) and the installation instructions below. Confirm that the release contains its assets before you install. These instructions do not establish successful installation or hardware compatibility on your PC.
 
 ## Start here
