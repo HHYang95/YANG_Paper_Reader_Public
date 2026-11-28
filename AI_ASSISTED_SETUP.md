@@ -1,12 +1,12 @@
 # Install with help from your Claude or Codex
 
-**Stable Windows release: 0.2.1.** Start from the [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Public) and its matching release. Verify actual download availability and each installation result; do not infer them from the existence of these instructions.
+**Stable Windows release: 0.2.2.** Start from the [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Public) and its matching release. Verify actual download availability and each installation result; do not infer them from the existence of these instructions.
 
-Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. You install the Reader with its Setup, `YANG_Paper_Reader_Setup_0.2.1.exe`, which holds the compiled and obfuscated program, installs it and runs its pinned runtime setup at its end. Your AI can help you check the requirements, download the Setup and check its SHA-256 with the guide's two lines, and read the logs after a failure; you go through the Setup's pages, sign in and start the Reader yourself. The main source remains private. Small readable startup files in the application retain the application's terms; the Setup's script alone uses AGPL-3.0-or-later. Python, the NVIDIA driver and your AI command-line tool are separate installations from official vendor instructions; account sign-in remains yours.
+Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. You install the Reader with its Setup, `YANG_Paper_Reader_Setup_0.2.2.exe`, which holds the compiled and obfuscated program, installs it and runs its pinned runtime setup at its end. Your AI can help you check the requirements, download the Setup and check its SHA-256 with the guide's two lines, and read the logs after a failure; you go through the Setup's pages, sign in and start the Reader yourself. The main source remains private. Small readable startup files in the application retain the application's terms; the Setup's script alone uses AGPL-3.0-or-later. Python, the NVIDIA driver and your AI command-line tool are separate installations from official vendor instructions; account sign-in remains yours.
 
 ## Checklist
 
-1. Confirm that the official release 0.2.1 is published and that its page holds `YANG_Paper_Reader_Setup_0.2.1.exe`.
+1. Confirm that the official release 0.2.2 is published and that its page holds `YANG_Paper_Reader_Setup_0.2.2.exe`.
 2. Check native Windows 64-bit, Python 3.12 x64, NVIDIA GPU and driver visibility, Claude Code or Codex and disk space against the guide's requirements. Use the guide's official Python, NVIDIA, Claude Code and Codex links. Do not silently replace Python, install a compiler or disable a security policy.
 3. Download the Setup with the first of the guide's two PowerShell lines and check its SHA-256 with the second, which starts the Setup only when the SHA-256 matches. Run no installer silently and no remote script.
 4. Go through the Setup's pages yourself: the program folder, a new or empty runtime folder or the runtime folder of an earlier installation, and the Requirements page with its box Set up the parsing runtime at the end of Setup. With that box checked, the runtime setup runs at the end of the Setup and ends with a GPU check.
@@ -20,7 +20,7 @@ Read [INSTALL_GUIDE.md](INSTALL_GUIDE.md) first. You install the Reader with its
 ```text
 Help me install YANG Paper Reader from https://github.com/HHYang95/YANG_Paper_Reader_Public using README.md, INSTALL_GUIDE.md and AI_ASSISTED_SETUP.md.
 
-First check the public release status. The target is 0.2.1; do not claim it is available merely because the files describe it. The Reader installs with its Setup, YANG_Paper_Reader_Setup_0.2.1.exe, from the release page. Do not build the private application source or invent download URLs.
+First check the public release status. The target is 0.2.2; do not claim it is available merely because the files describe it. The Reader installs with its Setup, YANG_Paper_Reader_Setup_0.2.2.exe, from the release page. Do not build the private application source or invent download URLs.
 
 Explain each command before you run it. Keep the protected application and its minimal readable startup files under their application terms, separate from the Setup's script under AGPL-3.0-or-later. Preserve third-party rights and supplied notices.
 

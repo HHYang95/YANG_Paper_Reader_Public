@@ -4,7 +4,7 @@ YANG Paper Reader is a standalone Windows application for reading research PDFs,
 
 Watch the 2:30 introduction on YouTube: [YANG Paper Reader](https://www.youtube.com/watch?v=LzsCjgvVZKQ).
 
-**Stable Windows release: 0.2.1.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.1) and the installation instructions below. Confirm that the release contains its assets before you install. These instructions do not establish successful installation or hardware compatibility on your PC.
+**Stable Windows release: 0.2.2.** Use the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.2) and the installation instructions below. Confirm that the release contains its assets before you install. These instructions do not establish successful installation or hardware compatibility on your PC.
 
 ## Start here
 
@@ -12,7 +12,7 @@ Use this [official repository](https://github.com/HHYang95/YANG_Paper_Reader_Pub
 
 Read the [installation guide](INSTALL_GUIDE.md) and the requirements below. You install the Reader with its Setup.
 
-Download `YANG_Paper_Reader_Setup_0.2.1.exe` from the [0.2.1 release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.1). Its SHA-256 is 02677ad7e676b5c1ae89fbc9cd974bffca06b6b31f6b1eb050f1ffcbf0bafe3e; check it before you run the file, as the two PowerShell lines of the installation guide do. The Setup installs the program for your Windows account without administrator rights. It checks Python, the NVIDIA GPU and its driver, Claude Code or Codex and the free disk space, with a link for a missing tool, and runs the parsing runtime setup at its end. Then start the Reader from the Start menu. The Setup and the program are not code-signed: Windows may ask you to choose More info, then Run anyway, and while Smart App Control is on they cannot run.
+Download `YANG_Paper_Reader_Setup_0.2.2.exe` from the [0.2.2 release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.2). Its SHA-256 is 1a2db91191b2dbb1406d62f0cd8e32dcae2c25c6df855f3a77e973f50d27acdd; check it before you run the file, as the two PowerShell lines of the installation guide do. The Setup installs the program for your Windows account without administrator rights. It checks Python, the NVIDIA GPU and its driver, Claude Code or Codex and the free disk space, with a link for a missing tool, and runs the parsing runtime setup at its end. Then start the Reader from the Start menu. The Setup and the program are not code-signed: Windows may ask you to choose More info, then Run anyway, and while Smart App Control is on they cannot run.
 
 Install Python 3.12 (64-bit), the NVIDIA driver and your AI command-line tool separately, from their official instructions; the Setup does not install them, sign in or start the Reader. The installed program also holds the manual and the installation guide as pages that open in your web browser without an internet connection: User Manual and Install Guide in the Start menu open them, and User Manual in the Reader's Information dialog opens the manual.
 
@@ -36,7 +36,7 @@ If your own Claude/Codex helps with installation, give it [AI_ASSISTED_SETUP.md]
 
 ## Limits and what to check
 
-YANG Paper Reader parses your PDF on your PC, and your own AI writes every answer; both can be wrong. Parsing can misread equations, tables and symbols, and it does not read text inside figures. The headings and captions it detects are not verified. Parsed Text and Equation transcriptions mark what they could not confirm against the PDF's own text. A scanned page has no text to find or select; its text comes only from full parsing. For each answer, the Reader checks that every quotation appears in the text the request sent. After full parsing that is mostly the parsed text, which can differ from the printed page. Sources marks a source whose quotation could not be matched to the text of its page as Check in the paper, with its page: the Reader could not match the AI's quotation to that page, so open the page and check the passage. An answer with such a source is still shown, unless none of its sources could be matched; an image of the paper it cites, such as a Figure or Table, counts as matched. The Reader does not check the AI's own sentences, numbers, formulas, translations or extracted table values, or what it says about a figure or table. A PDF of more than 200 pages does not open, and the Paper Summary and Auto Highlight, which send the text of every page, are refused for a paper of more than 48 pages. Before you rely on an answer, open its sources and compare them with the page.
+YANG Paper Reader parses your PDF on your PC, and your own AI writes every answer; both can be wrong. Parsing can misread equations, tables and symbols, and it does not read text inside figures. The headings and captions it detects are not verified. Parsed Text and Equation transcriptions mark what they could not confirm against the PDF's own text. A page without embedded text cannot be searched or selected directly; use Parsed Text after full parsing. A scanned PDF with an OCR text layer can still expose incorrect characters. For each answer, the Reader checks that every quotation appears in the text the request sent. A request can use embedded PDF text, parsed text and source images; either text source can differ from the printed page. Sources marks a source whose quotation could not be matched to the text of its page as Check in the paper, with its page: the Reader could not match the AI's quotation to that page, so open the page and check the passage. An answer with such a source is still shown, unless none of its sources could be matched; an image of the paper it cites, such as a Figure or Table, counts as matched. The Reader does not check the AI's own sentences, numbers, formulas, translations or extracted table values, or what it says about a figure or table. A PDF of more than 200 pages does not open, and the Paper Summary and Auto Highlight, which send the text of every page, are refused for a paper of more than 48 pages. Before you rely on an answer, open its sources and compare them with the page.
 
 ## Terms and support
 
@@ -46,7 +46,9 @@ YANG Paper Reader parses your PDF on your PC, and your own AI writes every answe
 
 Share the official repository link. When reporting a problem there, include the version, failed stage and exact error, after removing paper content and personal details from logs. Installation checks do not certify every Windows/GPU combination or a successful AI request.
 
-## Changes in 0.2.1
+## Changes in 0.2.2
 
-- Figures can now include both side callouts and their text when their pointers identify the same illustration.
-- A heading inside a matched callout stays with the figure when you reopen a saved parse. Nearby article headings keep their section actions.
+- Text selection handles confirmed printed margin-number layouts more accurately. Selected passages that continue from one column to another can use separate original images, and selection questions more accurately identify their paragraph context.
+- Parsed Text offers an optional comparison when it can isolate a word difference. Figure actions retain captions across the maintained adjacent-page and adjacent-block cases.
+- A validated first reading answer remains available if a supplemental response has invalid JSON. Table questions ask the AI to preserve literal identifiers, units and qualifications; answers still need checking against the paper.
+- DOI extraction handles a following web address. Installation and AI Settings explain runtime setup and the limits of sign-in detection more clearly.

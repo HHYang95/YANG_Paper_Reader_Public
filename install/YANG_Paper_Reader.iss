@@ -18,7 +18,7 @@
   #define AppTitle "YANG Paper Reader"
 #endif
 #ifndef AppVersion
-  #define AppVersion "0.2.1"
+  #define AppVersion "0.2.2"
 #endif
 #ifndef ProductDir
   #error Define ProductDir: the folder of the program to install.
@@ -577,9 +577,9 @@ begin
   CheckNote.AutoSize := False;
   CheckNote.WordWrap := True;
   CheckNote.Width := CheckPage.SurfaceWidth;
-  CheckNote.Caption := 'The runtime setup runs at the end of this Setup only when the box above is checked. ' +
-    'If you install something that is missing, you can still finish this Setup and run ' +
-    'Set Up Parsing Runtime from the Start menu afterward, or run this Setup again.';
+  CheckNote.Caption := 'Starts checked only if Python and GPU checks pass. ' +
+    'Check to run runtime setup when Setup finishes, or use ' +
+    'Start > Set Up Parsing Runtime later. Requirements still apply.';
   ResultMemo := TNewMemo.Create(WizardForm);
   ResultMemo.Parent := WizardForm.FinishedPage;
   ResultMemo.ReadOnly := True;

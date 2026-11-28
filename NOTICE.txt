@@ -7,7 +7,7 @@ INSTALL_GUIDE.md takes you through the installation.
 
 1. Release status and terms
 
-   This public-edition package is prepared for stable release 0.2.1.
+   This public-edition package is prepared for stable release 0.2.2.
    Consult the official repository and matching GitHub Release for actual
    availability.
    THIRD_PARTY_NOTICES.txt identifies component notices and source access.

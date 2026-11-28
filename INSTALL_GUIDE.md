@@ -1,6 +1,6 @@
 # Install YANG Paper Reader on Windows
 
-**Stable Windows release: 0.2.1.** These instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.1) and its Setup, `YANG_Paper_Reader_Setup_0.2.1.exe`.
+**Stable Windows release: 0.2.2.** These instructions apply to the matching [official release](https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/tag/0.2.2) and its Setup, `YANG_Paper_Reader_Setup_0.2.2.exe`.
 
 ## 1. Requirements
 
@@ -64,18 +64,19 @@ Install Claude Code or Codex, and sign in.
 2. Check it with `claude --version` or `codex --version`.
 3. Sign in yourself through the vendor's flow.
 
-- A browser login or desktop application alone does not establish that the Reader finds the command-line tool.
+- A browser login or desktop application alone does not establish that the Reader finds the command-line tool. A version check or **Detected** in AI Settings does not verify sign-in.
+- With several browser accounts, check that the vendor's sign-in page uses the account you intend to use in the selected command-line tool. If a Reader request reports a sign-in error, sign in to that tool again and retry.
 - **Limit:** with Claude Code older than 2.1.330 or Codex older than 0.171.0, AI Settings asks for an update; no AI request goes through it.
 
 ## 3. Install with the Setup
 
 The Setup installs the program for your Windows account and asks for no administrator rights. Take it and this guide only from the official repository and its release page.
 
-1. The Setup's SHA-256 is 02677ad7e676b5c1ae89fbc9cd974bffca06b6b31f6b1eb050f1ffcbf0bafe3e. In PowerShell, run the two lines below; they download the Setup and start it only when its SHA-256 matches.
+1. The Setup's SHA-256 is 1a2db91191b2dbb1406d62f0cd8e32dcae2c25c6df855f3a77e973f50d27acdd. In PowerShell, run the two lines below; they download the Setup and start it only when its SHA-256 matches.
 
 ```powershell
-Invoke-WebRequest -UseBasicParsing -Uri https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.2.1/YANG_Paper_Reader_Setup_0.2.1.exe -OutFile .\YANG_Paper_Reader_Setup_0.2.1.exe
-if ((Get-FileHash .\YANG_Paper_Reader_Setup_0.2.1.exe -Algorithm SHA256).Hash -eq '02677ad7e676b5c1ae89fbc9cd974bffca06b6b31f6b1eb050f1ffcbf0bafe3e') { Start-Process .\YANG_Paper_Reader_Setup_0.2.1.exe } else { Write-Error 'The SHA-256 does not match. Do not run this file.' }
+Invoke-WebRequest -UseBasicParsing -Uri https://github.com/HHYang95/YANG_Paper_Reader_Public/releases/download/0.2.2/YANG_Paper_Reader_Setup_0.2.2.exe -OutFile .\YANG_Paper_Reader_Setup_0.2.2.exe
+if ((Get-FileHash .\YANG_Paper_Reader_Setup_0.2.2.exe -Algorithm SHA256).Hash -eq '1a2db91191b2dbb1406d62f0cd8e32dcae2c25c6df855f3a77e973f50d27acdd') { Start-Process .\YANG_Paper_Reader_Setup_0.2.2.exe } else { Write-Error 'The SHA-256 does not match. Do not run this file.' }
 ```
 
 2. If Windows shows "Windows protected your PC" for a Setup whose SHA-256 matched, choose **More info**, then **Run anyway**.
@@ -83,7 +84,7 @@ if ((Get-FileHash .\YANG_Paper_Reader_Setup_0.2.1.exe -Algorithm SHA256).Hash -e
 4. Go on from **Select Destination Location**, which shows the program folder; an update skips this page.
 5. On **Parsing Runtime Folder**, choose a new or empty folder, or an earlier installation's runtime folder, whose runtime is not downloaded again.
 6. On **Requirements**, read its checks; none stops the installation, and a missing tool shows its official link.
-7. Keep or change the box **Set up the parsing runtime at the end of Setup**, checked at first when Python and the GPU pass.
+7. Keep or change the box **Set up the parsing runtime at the end of Setup**. It starts checked only when both the Python and GPU checks pass. If it starts unchecked, read the results above it; you can check it yourself to run runtime setup. This choice does not change the supported requirements.
 8. On **Ready to Install**, check the runtime folder and whether the runtime setup runs.
 9. With the box checked, wait while the runtime setup downloads packages and models; this can take a long time.
 10. On the last page, read whether the parsing runtime is ready.
@@ -170,7 +171,7 @@ A new version's Setup installs over the earlier one.
 If you installed an earlier version with the PowerShell installer:
 
 1. Close that Reader.
-2. Install 0.2.1 with the Setup, and give **Parsing Runtime Folder** the runtime folder you already downloaded.
+2. Install 0.2.2 with the Setup, and give **Parsing Runtime Folder** the runtime folder you already downloaded.
 3. Delete the old program folder yourself.
 
 ## 7. Uninstall

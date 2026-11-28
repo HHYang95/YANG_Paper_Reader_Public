@@ -1,6 +1,6 @@
 # YANG Paper Reader: Standalone Manual
 
-**Stable Windows release: 0.2.1.** This manual describes the standalone program.
+**Stable Windows release: 0.2.2.** This manual describes the standalone program.
 
 - Start with [README.md](README.md) and [INSTALL_GUIDE.md](INSTALL_GUIDE.md) in the official public repository.
 - Every AI request runs on your own account, through the Claude Code or Codex program you signed in to, and counts on that account.
@@ -52,7 +52,9 @@ Reopens a paper where you stopped, with its notes and answers.
 Opens another PDF while one is open.
 
 1. Drop one PDF file on the window, or use Open PDF or Recent PDFs.
-2. If the Reader is still working, choose Stop Work and Open, or Go Back.
+2. If the Reader is still working, choose Stop Work and Open to stop its running work and open the chosen PDF, or Go Back to keep the current PDF and its work running.
+
+- If parsing remains stopped when you return to a paper, open **Workspace** and choose **Retry Parsing**.
 
 - **Limit:** dragging anything but one PDF file shows Cannot Open This File.
 
@@ -96,6 +98,8 @@ Shows the text the parsing read.
 2. Click Copy Reading to copy a passage's text, its mathematics as LaTeX.
 
 - An uncertain passage offers View Original at its PDF location.
+- When the Reader can isolate a word difference, expand Compare a word that differs in the PDF text layer to see the parsed phrase and the PDF text-layer phrase. Opening this comparison does not change Copy Reading.
+- The PDF text layer can itself contain OCR errors. Use View Original to check the printed word; the comparison is not offered for every mismatch.
 
 ## 4. Paper Information and the 5-Sentences Summary
 
@@ -138,7 +142,7 @@ Translates the selection.
 1. Click Translate.
 
 - A card appears under Translate, in the Answer Language of AI Settings.
-- **Sent:** the selected text with its image cut from the page.
+- **Sent:** the selected text with original images cut from the page. A confirmed continuation from one column to another can be split into separate source images. Image boundaries may include short neighboring text on the same line.
 
 ### Ask
 
@@ -148,8 +152,10 @@ Asks your AI about the selection.
 2. Type your question, or press Tab for the suggested one, and press Enter.
 
 - The answer comes as a card under Explanation; a notice offers Open.
-- **Sent:** your question, the selection, its paragraph, Figures it lies in or names, and images of such Tables or Equations with unclear parsed text.
-- **Sent:** before full parsing, nearby text and images instead.
+- The first selection question shows a reminder that Ask may include nearby text or images from the PDF with the selection.
+- **Sent:** your question and selection, plus context the Reader can associate with it. After full parsing this can include parsed passages and related Figure, Table or Equation evidence. It is not always limited to the exact selected words or one paragraph.
+- **Sent:** before full parsing, available nearby text and images can be used instead.
+- Text with a faulty embedded OCR character can differ from the printed page. Compare it with View Original before relying on an answer; a different selection does not repair the original text layer.
 
 ### Copy
 
@@ -202,6 +208,7 @@ Asks your AI about one Figure, Table or Equation.
 - The answer comes under Explanation; a small answer box in its corner or beside it opens its answers.
 - Copy Image and Save Image copy or save its picture as cut from the page, and send nothing.
 - **Sent:** its image and caption, the paragraphs that refer to it and those around it, as text and images.
+- Table questions ask the AI to preserve literal identifiers, units, symbols and qualifications, and to leave unclear cells uncertain. This instruction does not verify the generated values; compare them with the original table.
 - **Limit:** a save into a linked or network folder is refused, and no file is replaced.
 
 ### LaTeX
@@ -337,6 +344,7 @@ Chooses the AI program, model and answer language.
 3. Click Save.
 
 - On first use the Reader selects Codex if both programs are found, else the one found.
+- **Detected · Sign-in not checked** means the command-line tool passed its version check. If a request reports a sign-in error, sign in to that selected tool with the intended account, then retry. With several browser accounts, check the account on the sign-in page.
 - **If it stops:** if the runtime is Unavailable, install or update Claude Code or Codex (INSTALL_GUIDE.md, section 2) and sign in.
 
 ### General Settings
